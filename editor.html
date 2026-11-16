@@ -2,26 +2,139 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f8f7fc"><meta name="description" content="좋아하는 그림체를 차곡차곡. 작가 태그와 비교 이미지를 모으는 나만의 작태 노트.">
+  <meta name="theme-color" content="#f7f8fa"><meta name="description" content="좋아하는 그림체를 차곡차곡. 작가 태그와 비교 이미지를 모으는 나만의 작태 노트.">
   <title>작태 노트 · 목록 편집</title><style>@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap');
 :root{--ink:#302e3a;--muted:#93909f;--purple:#8270b2;--pale:#f0ecf8;--border:#e9e6ef;--paper:#fff;--bg:#f8f7fb}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:'DM Sans','Noto Sans KR',sans-serif;font-size:14px}button,input,textarea,select{font:inherit}button,a,input,textarea,select{-webkit-tap-highlight-color:transparent}button{cursor:pointer}button:disabled{cursor:wait;opacity:.5}button:focus-visible,a:focus-visible,select:focus-visible{outline:3px solid #baa6e0;outline-offset:3px}button{border:0}a{color:inherit;text-decoration:none}[hidden]{display:none!important}.page{max-width:1320px;margin:auto;padding:0 56px}.topbar{height:90px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}.brand{display:flex;gap:10px;align-items:center;font-weight:700;font-size:18px;letter-spacing:-.7px}.brand-icon{font-size:25px;color:var(--purple)}.brand-en{font-size:10px;letter-spacing:2px;color:#a39aaf;border-left:1px solid #ddd7e7;padding-left:14px;margin-left:6px;font-weight:500}.private-label{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:12px}.private-label i{width:6px;height:6px;border-radius:50%;background:#ac9cc9}.intro{display:flex;justify-content:space-between;align-items:center;padding:55px 0 48px}.eyebrow{font-size:10px;letter-spacing:2px;color:var(--purple);font-weight:700;margin:0 0 20px}h1{font-size:44px;line-height:1.42;letter-spacing:-2px;margin:0;font-weight:700}.intro-copy{font-size:14px;line-height:1.9;color:#8c8797;margin:19px 0 0}.note-art{position:relative;width:300px;height:230px;margin-right:34px}.paper{position:absolute;width:155px;height:195px;border:1px solid #e1dbea;box-shadow:0 10px 30px #65527b09;border-radius:3px}.back{background:#eae4f2;transform:rotate(-12deg);left:44px;top:18px}.front{background:#fffefd;left:74px;top:18px;transform:rotate(9deg);padding:22px 17px}.front>span{font-size:7px;letter-spacing:1.5px;color:#9c8caf}.paper-star{font-size:76px;color:#c6b8de;text-align:center;height:94px;line-height:1.25}.paper-lines{height:15px;border-top:1px solid #ebe5ef;border-bottom:1px solid #ebe5ef}.front small{display:block;font-size:9px;color:#aaa0b5;margin-top:10px}.tape{position:absolute;top:3px;left:116px;width:68px;height:27px;background:#d6cce4a8;transform:rotate(6deg)}.spark{position:absolute;right:7px;bottom:28px;font-size:37px;color:#b7a5cd}.collection{border-top:1px solid var(--border);padding-top:23px}.collection-heading{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:24px}.tabs{display:flex;gap:25px;align-items:center}.tab{position:relative;background:none;padding:12px 0;font-size:15px;font-weight:500;color:#9993a4}.tab.active{color:#665188;font-weight:700}.tab.active:after{content:'';height:2px;background:#8d77af;position:absolute;bottom:-2px;left:0;right:0}.tab span{display:inline-block;border-radius:5px;padding:2px 6px;font-size:11px;background:#efedf3;color:#9b92a7;margin-left:5px}.tab.active span{background:#eae4f3;color:#84709f}.primary,.secondary{border-radius:8px;padding:11px 17px;font-size:12px;font-weight:600;transition:.18s}.primary{background:var(--purple);color:white;box-shadow:0 3px 7px #8270b21c}.primary:hover{background:#705d9e}.primary>span{font-size:17px;margin-right:4px}.secondary{background:#f5f2f9;color:#7a698f;border:1px solid #e6deef}.search-row{display:flex;gap:12px}.search{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--border);border-radius:9px;padding:0 16px;flex:1;min-width:0;height:49px}.search:focus-within{border-color:#b5a0cf;box-shadow:0 0 0 3px #ece6f4}.search svg{width:18px;height:18px;stroke:#aaa1b9;fill:none;stroke-width:1.7;flex-shrink:0}.search input{border:0;outline:0;width:100%;background:transparent;font-size:13px;color:var(--ink);min-width:0}.search input::placeholder{color:#aba4b4}.search kbd{border:1px solid #ebe7f0;color:#b1a8bb;padding:1px 6px;border-radius:4px;font-size:11px}select{background:#fff;border:1px solid var(--border);color:#81778d;border-radius:9px;padding:0 14px;font-size:12px;min-width:127px}.result-row{display:flex;align-items:center;justify-content:space-between;margin:20px 0 15px;color:#aaa3b2;font-size:11px}.result-row p{margin:0;color:#918799;font-size:12px}.result-row strong{color:#6a5a7c}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:21px}.card{background:white;border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:transform .2s,box-shadow .2s}.card:hover{transform:translateY(-3px);box-shadow:0 10px 27px #65547e0e}.image-wrap{position:relative;padding:7px 7px 0}.image-btn{display:block;width:100%;aspect-ratio:4/4.6;padding:0;border-radius:7px;overflow:hidden;background:#f3eef8;text-align:center}.image-btn>img{width:100%;height:100%;object-fit:cover;display:block}.placeholder{height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;overflow:hidden;color:#a69ab7;background:linear-gradient(145deg,#f3eff9,#eae4f4)}.tone-1{background:linear-gradient(145deg,#f6f0ee,#e8dde2);color:#b6a0a7}.tone-2{background:linear-gradient(145deg,#eef3f4,#dfe8ea);color:#9cafb3}.tone-3{background:linear-gradient(145deg,#f4f1e9,#eae5d9);color:#b4aa92}.tone-4{background:linear-gradient(145deg,#f0eef6,#e1ddec);color:#a49ab5}.tone-5{background:linear-gradient(145deg,#eef3ef,#e0e8df);color:#a0af9e}.placeholder::before,.placeholder::after{content:'';position:absolute;border:1px solid currentColor;opacity:.18;border-radius:50%;width:200px;height:200px;top:-65px;right:-65px}.placeholder::after{top:auto;right:auto;bottom:-80px;left:-100px;width:260px;height:260px}.placeholder .big{font-size:58px;font-weight:400;letter-spacing:-3px;opacity:.55;margin-top:10px}.placeholder .line{width:24px;height:1px;background:currentColor;opacity:.4;margin:18px 0 14px}.placeholder .caption{font-size:9px;letter-spacing:2px;font-weight:600}.placeholder small{font-size:10px;opacity:.85;margin-top:8px}.fav{position:absolute;right:17px;top:17px;width:30px;height:30px;border-radius:50%;background:#ffffffd9;color:#a49aaf;font-size:21px;display:grid;place-items:center;line-height:1}.fav.selected{color:#9571aa;background:#fff}.card-body{padding:16px}.card-number{font-size:9px;letter-spacing:1.4px;color:#b2a8bd;margin-bottom:7px;display:flex;justify-content:space-between}.card-number small{font-size:9px;letter-spacing:0;color:#aba2b5}.name-row{display:flex;align-items:center;justify-content:space-between;gap:8px}.tag-name{background:none;padding:0;display:flex;gap:8px;align-items:center;text-align:left;min-width:0;font-size:15px;font-weight:600;color:#4d425b}.tag-name span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tag-name svg{flex-shrink:0;width:12px;height:12px;stroke:#b6a7c6;fill:none;stroke-width:1.5}.tag-name:hover{color:var(--purple)}.edit-btn{padding:4px 0 4px 5px;background:none;color:#b1a6bd;font-size:11px;white-space:nowrap}.card-note{color:#aaa1b1;font-size:11px;line-height:1.6;margin:9px 0 0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;min-height:18px}.chips{display:flex;gap:5px;margin-top:11px;flex-wrap:wrap}.chip{font-size:9px;background:#f7f5fa;border-radius:4px;padding:4px 6px;color:#a193ad}.tip{display:flex;align-items:center;gap:15px;background:#f0edf6;border:1px solid #e7e0f0;border-radius:10px;margin:30px 0 40px;padding:18px 21px}.tip-icon{font-size:22px;color:#ae98c7}.tip p{font-size:11px;color:#9c8dad;line-height:1.8;margin:0;flex:1}.tip strong{color:#857296;font-size:12px;font-weight:500}.text-btn{padding:4px;background:none;font-size:11px;color:#8d759f;white-space:nowrap}footer{border-top:1px solid var(--border);padding:25px 0 30px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:15px;align-items:center}footer strong{font-size:12px;color:#8f819f}footer span{font-size:10px;color:#b7adbf;margin-left:15px}.footer-actions{display:flex;gap:16px}.footer-actions button{font-size:10px;color:#9b8fa8;background:none;padding:5px 0}footer p{width:100%;margin:0;font-size:10px;color:#b6acbf}.empty{text-align:center;padding:65px 10px;color:#93839e}.empty>span{font-size:44px;color:#baa7ce}.empty h2{font-size:18px;font-weight:500}.empty p{font-size:13px;margin-bottom:23px}dialog{border:1px solid var(--border);border-radius:16px;padding:28px;width:min(540px,calc(100% - 32px));max-height:90dvh;color:var(--ink);box-shadow:0 30px 100px #372c4c25}dialog::backdrop{background:#30293c55;backdrop-filter:blur(5px)}.dialog-heading{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:22px}.dialog-heading .eyebrow{font-size:9px;margin-bottom:8px}h2{font-size:21px;letter-spacing:-.7px;margin:0;overflow-wrap:anywhere}.icon-btn{background:#f5f2f8;border-radius:50%;font-size:24px;line-height:1;width:30px;height:30px;flex-shrink:0;color:#a192ae}.field{display:block;margin-bottom:18px;font-size:12px;color:#7c6e89;font-weight:500}.required{color:#a892be}.field input,.field textarea,#copyText{display:block;width:100%;margin:8px 0 5px;border:1px solid #e5dfec;border-radius:8px;padding:11px 12px;background:#fdfcfe;color:#4d425b;outline:none;resize:vertical;font-size:13px}.field input:focus,.field textarea:focus{border-color:#ac93c6}.field input::placeholder,.field textarea::placeholder{color:#bbb1c4}.field small{font-size:10px;color:#afa3b9;font-weight:400}.upload{border:1px dashed #d7cbe3;border-radius:8px;margin-top:9px;display:flex;padding:16px;align-items:center;justify-content:center;gap:16px;background:#fbf9fd}.upload img{width:64px;height:74px;object-fit:cover;border-radius:4px}.upload-label{cursor:pointer;text-align:center;display:flex;flex-direction:column;gap:6px}.upload-label b{font-weight:500;color:#9980af}.upload-label span{font-size:10px;color:#b6a7c1}.remove-image{margin-top:7px}.dialog-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-top:23px}.dialog-actions>span{flex:1}.danger{color:#af7f8c}.error{font-size:12px;color:#b46d81;line-height:1.6}.help-body p{line-height:1.9;font-size:13px;color:#9786a4;margin-bottom:22px}.help-body b{color:#79628b}#viewer{width:min(680px,calc(100% - 32px))}#viewImage img{max-width:100%;max-height:60dvh;display:block;margin:auto;border-radius:8px}#viewImage .placeholder{min-height:280px;border-radius:8px}#viewNote{font-size:13px;color:#9684a4;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere}.toast{position:fixed;bottom:28px;left:50%;transform:translate(-50%,16px);background:#554563;color:white;padding:13px 24px;border-radius:10px;box-shadow:0 5px 25px #5e476132;font-size:12px;opacity:0;transition:.2s;pointer-events:none;z-index:20;max-width:90%;text-align:center}.toast.show{opacity:1;transform:translate(-50%,0)}@media(min-width:1500px){.page{max-width:1420px}.grid{grid-template-columns:repeat(5,minmax(0,1fr))}}@media(max-width:1000px){.page{padding:0 32px}.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.note-art{margin-right:0}.intro{padding:42px 0}.intro h1{font-size:38px}.brand-en{display:none}}@media(max-width:650px){.page{padding:0 20px}.topbar{height:70px}.private-label{font-size:10px}.intro{padding:36px 0 32px;position:relative}.eyebrow{font-size:8px;letter-spacing:1.1px}.intro h1{font-size:32px}.intro-copy{font-size:12px;position:relative;z-index:1}.note-art{transform:scale(.65);transform-origin:right center;position:absolute;right:-18px;top:13px;width:240px;opacity:.7;pointer-events:none}.intro>div:first-child{z-index:1}.collection{padding-top:13px}.collection-heading{margin-bottom:20px}.tabs{gap:14px}.tab{font-size:12px}.tab span{font-size:9px;margin-left:2px;padding:2px 4px}.primary,.secondary{padding:10px 12px;font-size:11px}.primary>span{margin-right:0}.search{padding:0 11px;gap:8px}.search input{font-size:11px}.search kbd{display:none}.search-row{gap:7px}select{min-width:99px;padding:0 6px;font-size:10px}.result-row>span{font-size:9px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.card-body{padding:12px}.tag-name{font-size:12px}.tag-name svg{display:none}.edit-btn{font-size:9px}.card-note{font-size:9px}.card-number{font-size:8px;letter-spacing:1px}.card-number small{font-size:8px}.placeholder .big{font-size:44px}.placeholder .caption{font-size:7px;letter-spacing:1.5px}.placeholder small{font-size:8px}.fav{width:27px;height:27px;right:13px;top:13px}.tip{padding:15px;gap:11px;flex-wrap:wrap}.tip p{font-size:10px}.tip strong{font-size:11px}.tip .text-btn{margin-left:30px}.tip-icon{align-self:flex-start}footer{gap:12px}footer span{margin-left:10px}footer p{line-height:1.8;font-size:9px}.footer-actions{gap:13px}.footer-actions button{font-size:9px}dialog{padding:22px}.chips{gap:3px}.chip{font-size:8px}.note-art .spark{display:none}}@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+
+:root {
+  --ink: #182026;
+  --muted: #606b75;
+  --purple: #245b52;
+  --pale: #eaf1ee;
+  --border: #e1e5e9;
+  --bg: #f7f8fa;
+  --paper: #fff;
+}
+
+body { font-family: 'Noto Sans KR', system-ui, sans-serif; }
+.page { max-width: 1232px; padding: 0 40px; }
+.gallery-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 58px 0 30px;
+}
+.gallery-header h1 { font-size: 33px; line-height: 1.25; letter-spacing: -.035em; }
+.gallery-header p { margin: 10px 0 0; color: var(--muted); font-size: 14px; }
+.gallery-link { font-size: 13px; color: var(--purple); white-space: nowrap; }
+.gallery-link:hover, .text-btn:hover, .footer-actions button:hover { text-decoration: underline; }
+.collection { border: 0; padding: 0 0 40px; }
+.search-row { gap: 10px; }
+.search { height: 48px; border-radius: 8px; padding: 0 14px; }
+.search svg { stroke: #687580; }
+.search input { font-size: 14px; }
+.search input::placeholder { color: #687580; }
+.search:focus-within { border-color: #659087; box-shadow: 0 0 0 3px #dce9e5; }
+select { color: #37434e; border-radius: 8px; }
+.collection-heading { margin: 16px 0 0; border-bottom: 1px solid var(--border); }
+.tabs { gap: 22px; }
+.tab { font-size: 14px; color: var(--muted); padding: 12px 0; }
+.tab.active { color: var(--ink); }
+.tab.active::after { background: var(--purple); bottom: -1px; }
+.tab span, .tab.active span { background: #e9edf0; color: #4d5a65; }
+.result-row, .result-row p { color: var(--muted); }
+.result-row { margin: 17px 0 12px; }
+.result-row strong { color: var(--ink); }
+.primary { background: var(--purple); box-shadow: none; }
+.primary:hover { background: #19463f; }
+.secondary { color: #34424b; background: #f2f4f6; border-color: var(--border); }
+button:focus-visible, a:focus-visible, select:focus-visible { outline-color: #659087; }
+
+.grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.card { border-radius: 9px; transition: border-color .15s; }
+.card:hover { border-color: #aebcb9; box-shadow: none; transform: none; }
+.image-wrap { padding: 0; }
+.image-btn { aspect-ratio: 4 / 4.6; border-radius: 0; background: #eef1f3; }
+.placeholder { background: #eef1f3; color: #626f7a; }
+.placeholder::before, .placeholder::after,
+.placeholder .big, .placeholder .line, .placeholder .caption { display: none; }
+.placeholder small { color: #626f7a; opacity: 1; font-size: 11px; margin: 0; }
+.fav {
+  right: 10px;
+  top: 10px;
+  width: 33px;
+  height: 33px;
+  border: 1px solid #dde3e6;
+  background: #fff;
+  color: #52606b;
+}
+.fav.selected { color: var(--purple); }
+.card-body { padding: 13px 14px 15px; }
+.card-number { display: none; }
+.tag-name { font-size: 15px; color: var(--ink); }
+.tag-name svg { stroke: #687580; }
+.tag-name:hover, .edit-btn { color: var(--purple); }
+.card-note { color: var(--muted); white-space: normal; font-size: 12px; overflow-wrap: anywhere; }
+.chips { margin-top: 8px; }
+.chip { background: #eef1f3; color: #53606b; font-size: 10px; }
+
+.empty, .empty h2 { color: var(--muted); }
+.empty > span { display: none; }
+.tip { padding: 17px 18px; margin: 24px 0 0; background: #fff; border-color: var(--border); }
+.tip p { color: var(--muted); font-size: 12px; }
+.tip strong { color: var(--ink); font-weight: 600; }
+.publish-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 14px; }
+.text-btn, .footer-actions button { color: var(--purple); font-size: 12px; }
+.tip .text-btn { margin-left: 0; }
+footer p, footer span, footer strong { color: var(--muted); font-size: 12px; }
+footer { padding: 16px 0 24px; }
+.icon-btn { background: #eef1f3; color: #52606b; }
+.dialog-heading .eyebrow { display: none; }
+.field, .field small, .help-body p, #viewNote { color: var(--muted); }
+.field input, .field textarea, #copyText { background: #fff; border-color: var(--border); }
+.field input:focus, .field textarea:focus { border-color: #659087; }
+.upload { background: #f7f8fa; border-color: #b4bdc4; }
+.upload-label b, .help-body b { color: var(--purple); }
+.upload-label span { color: var(--muted); }
+.danger { color: #a53b4f; }
+.toast { background: #253b37; }
+
+@media (max-width: 900px) {
+  .page { padding: 0 28px; }
+  .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 620px) {
+  .page { padding: 0 16px; }
+  .gallery-header { padding: 34px 0 20px; }
+  .gallery-header h1 { font-size: 28px; }
+  .gallery-header p, .gallery-link { font-size: 12px; }
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .tabs { gap: 14px; }
+  .tab, .search input { font-size: 12px; }
+  .search-row { gap: 6px; }
+  .search { height: 43px; padding: 0 9px; }
+  .card-body { padding: 11px; }
+  .tag-name { font-size: 13px; }
+  .fav { right: 7px; top: 7px; width: 30px; height: 30px; }
+  .tip { align-items: flex-start; flex-direction: column; }
+}
 </style>
 </head>
 <body>
 <div class="page">
-  <header class="topbar"><a class="brand" href="./"><span class="brand-icon">▤</span> 작태 노트 <span class="brand-en">ARTIST NOTES</span></a><span class="private-label"><i></i> 목록 편집</span></header>
+  <header class="gallery-header"><div><h1>목록 편집</h1><p>공개할 작가 태그와 비교 이미지를 정리하세요.</p></div><a class="gallery-link" href="./">공개 갤러리 ↗</a></header>
   <main>
-    <section class="intro"><div><p class="eyebrow">A LITTLE COLLECTION OF INSPIRATION</p><h1>좋아하는 그림체를,<br>차곡차곡.</h1><p class="intro-copy">발견한 작가 태그와 마음에 든 이미지를 한곳에.<br>이름을 누르면 태그가 바로 복사돼요.</p></div><div class="note-art" aria-hidden="true"><div class="paper back"></div><div class="paper front"><span>MY ARTIST NOTES</span><div class="paper-star">✳</div><div class="paper-lines"></div><small>한 장씩, 나의 취향.</small></div><span class="tape"></span><span class="spark">✧</span></div></section>
     <section class="collection" aria-label="작가 태그 모음">
-      <div class="collection-heading"><div class="tabs" role="group" aria-label="보기 선택"><button class="tab active" id="allTab" aria-pressed="true">전체 모음 <span id="allCount">0</span></button><button class="tab" id="favTab" aria-pressed="false">♡ 즐겨찾기 <span id="favCount">0</span></button></div><button class="primary" id="addBtn"><span>＋</span> 태그 추가</button></div>
-      <div class="search-row"><label class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><input type="search" id="search" placeholder="작가 이름, 태그, 메모로 찾아보세요" aria-label="작가 이름, 태그, 메모 검색"><kbd>/</kbd></label><select id="sort" aria-label="정렬"><option value="new">최근 추가순</option><option value="name">이름순 A–Z</option><option value="old">오래된순</option></select></div>
-      <div class="result-row"><p id="resultCount" aria-live="polite"></p><span>이미지는 크게 보고, 이름은 눌러서 복사</span></div>
+      <div class="search-row"><label class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><input type="search" id="search" placeholder="작가 이름, 태그, 메모로 찾아보세요" aria-label="작가 이름, 태그, 메모 검색"></label><select id="sort" aria-label="정렬"><option value="new">최근 추가순</option><option value="name">이름순 A–Z</option><option value="old">오래된순</option></select></div>
+<div class="collection-heading"><div class="tabs" role="group" aria-label="보기 선택"><button class="tab active" id="allTab" aria-pressed="true">전체 모음 <span id="allCount">0</span></button><button class="tab" id="favTab" aria-pressed="false">♡ 즐겨찾기 <span id="favCount">0</span></button></div><button class="primary" id="addBtn"><span>＋</span> 태그 추가</button></div>
+      <div class="result-row"><p id="resultCount" aria-live="polite"></p></div>
       <div class="grid" id="grid"></div>
       <div class="empty" id="empty" hidden><span>✧</span><h2 id="emptyTitle">아직 모아둔 태그가 없어요</h2><p id="emptyText">첫 번째 취향을 기록해 보세요.</p><button class="secondary" id="emptyAction">태그 추가하기</button></div>
-      <aside class="tip"><span class="tip-icon">✦</span><p><strong>목록을 공개하려면</strong><br>태그를 추가하거나 편집한 다음 공개용 목록을 내려받으세요. GitHub에 올리면 태그·이미지·메모가 방문자에게 보입니다.</p><button class="primary" id="publishFile">공개용 목록 받기</button><a class="text-btn" href="https://github.com/akise4455/artist-notes/upload/main" target="_blank" rel="noopener noreferrer">GitHub에 올리기 ↗</a></aside><aside class="tip"><span class="tip-icon">✦</span><p><strong>나만의 모음을 시작해 보세요</strong><br>지금 보이는 카드는 예시 태그예요. 카드의 편집 버튼으로 직접 만든 비교 이미지와 메모를 채워 넣을 수 있어요.</p><button class="text-btn" id="helpBtn">사용 안내 ↗</button></aside>
+      <aside class="tip"><p><strong>목록 게시</strong><br>공개용 목록을 받은 뒤 GitHub에 올리면 태그, 이미지, 메모가 방문자에게 보입니다.</p><div class="publish-actions"><button class="primary" id="publishFile">공개용 목록 받기</button><a class="text-btn" href="https://github.com/akise4455/artist-notes/upload/main" target="_blank" rel="noopener noreferrer">GitHub에 올리기 ↗</a></div></aside>
     </section>
   </main>
-  <footer><div><strong>작태 노트</strong><span>취향을 모으는 작은 공간.</span></div><div class="footer-actions"><button id="exportBtn">백업 내보내기 ↓</button><button id="importBtn">백업 가져오기 ↑</button><input type="file" id="importFile" accept="application/json,.json" hidden></div><p>추가한 내용은 이 브라우저에 저장돼요. 다른 기기로 옮길 때는 백업을 이용해 주세요.</p></footer>
+  <footer><div><strong>작태 노트</strong><span>취향을 모으는 작은 공간.</span></div><div class="footer-actions"><button id="helpBtn">사용 안내</button><button id="exportBtn">백업 내보내기 ↓</button><button id="importBtn">백업 가져오기 ↑</button><input type="file" id="importFile" accept="application/json,.json" hidden></div><p>추가한 내용은 이 브라우저에 저장돼요. 다른 기기로 옮길 때는 백업을 이용해 주세요.</p></footer>
 </div>
 <dialog id="editor"><form id="editForm"><div class="dialog-heading"><div><p class="eyebrow">YOUR COLLECTION</p><h2 id="editorTitle">새로운 태그 추가</h2></div><button type="button" class="icon-btn" data-close="editor" aria-label="닫기">×</button></div><label class="field">작가 태그 <span class="required">*</span><input id="tagInput" required maxlength="150" placeholder="예: anmi"><small>복사할 태그를 그대로 입력해 주세요.</small></label><label class="field">분류 태그<input id="labelsInput" maxlength="200" placeholder="예: 부드러운 색감, 선화, 테스트 중"><small>쉼표로 구분해 자유롭게 정리할 수 있어요.</small></label><label class="field">메모<textarea id="noteInput" maxlength="1500" rows="3" placeholder="모델 버전, 프롬프트, 마음에 든 특징 등을 기록해 보세요."></textarea></label><div class="field">비교 이미지<div class="upload"><img id="uploadPreview" alt="업로드할 비교 이미지" hidden><label for="imageInput" class="upload-label"><b>＋ 이미지 선택</b><span>JPG · PNG · WebP · 최대 10MB</span></label><input id="imageInput" type="file" accept="image/jpeg,image/png,image/webp" hidden></div><button type="button" class="text-btn remove-image" id="removeImage" hidden>이미지 제거</button></div><p id="formError" class="error" role="alert"></p><div class="dialog-actions"><button type="button" class="danger text-btn" id="deleteBtn" hidden>태그 삭제</button><span></span><button type="button" class="secondary" data-close="editor">취소</button><button type="submit" class="primary" id="saveBtn">저장하기</button></div></form></dialog>
 <dialog id="viewer"><div class="dialog-heading"><div><p class="eyebrow">ARTIST PREVIEW</p><h2 id="viewTitle"></h2></div><button class="icon-btn" data-close="viewer" aria-label="닫기">×</button></div><div id="viewImage"></div><p id="viewNote"></p><div class="dialog-actions"><button class="secondary" id="viewEdit">편집하기</button><button class="primary" id="viewCopy">태그 복사</button></div></dialog>
