@@ -52,6 +52,10 @@ select { color: #37434e; border-radius: 8px; }
 button:focus-visible, a:focus-visible, select:focus-visible { outline-color: #659087; }
 
 .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.public-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.pagination { display: flex; justify-content: center; align-items: center; gap: 16px; margin-top: 24px; }
+.pagination span { color: var(--muted); font-size: 13px; }
+.pagination button:disabled { cursor: default; }
 .card { border-radius: 9px; transition: border-color .15s; }
 .card:hover { border-color: #aebcb9; box-shadow: none; transform: none; }
 .image-wrap { padding: 0; }
@@ -129,7 +133,7 @@ footer { padding: 16px 0 24px; }
       <div class="search-row"><label class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><input type="search" id="search" placeholder="작가 이름, 태그, 메모로 찾아보세요" aria-label="작가 이름, 태그, 메모 검색"></label><select id="sort" aria-label="정렬"><option value="new">최근 추가순</option><option value="name">이름순 A–Z</option><option value="old">오래된순</option></select></div>
 <div class="collection-heading"><div class="tabs" role="group" aria-label="보기 선택"><button class="tab active" id="allTab" aria-pressed="true">전체 모음 <span id="allCount">0</span></button><button class="tab" id="favTab" aria-pressed="false">♡ 즐겨찾기 <span id="favCount">0</span></button></div></div>
       <div class="result-row"><p id="resultCount" aria-live="polite"></p></div>
-      <div class="grid" id="grid"></div>
+      <div class="grid public-grid" id="grid"></div><nav class="pagination" aria-label="페이지 이동" id="pagination" hidden><button class="secondary" id="prevPage">이전</button><span id="pageLabel" aria-live="polite"></span><button class="secondary" id="nextPage">다음</button></nav>
       <div class="empty" id="empty" hidden><span>✧</span><h2 id="emptyTitle">아직 모아둔 태그가 없어요</h2><p id="emptyText">첫 번째 취향을 기록해 보세요.</p><button class="secondary" id="emptyAction">태그 추가하기</button></div>
     </section>
   </main>
@@ -142,6 +146,8 @@ footer { padding: 16px 0 24px; }
 
 const element = (id) => document.getElementById(id);
 const favoriteKey = 'artist-notes-public-favorites';
+const pageSize = 5 * 20;
+let currentPage = 1;
 let entries = [];
 let favorites = new Set();
 let filterFavorites = false;
@@ -273,7 +279,14 @@ function render() {
   element('allCount').textContent = entries.length;
   element('favCount').textContent = entries.filter((entry) => favorites.has(entry.key)).length;
   element('resultCount').textContent = loadState === 'ready' ? `${query ? '검색 결과' : '총'} ${list.length}개` : '';
-  element('grid').replaceChildren(...list.map(renderCard));
+  const pageCount = Math.max(1, Math.ceil(list.length / pageSize));
+  currentPage = Math.min(currentPage, pageCount);
+  const start = (currentPage - 1) * pageSize;
+  element('grid').replaceChildren(...list.slice(start, start + pageSize).map(renderCard));
+  element('pagination').hidden = pageCount <= 1;
+  element('pageLabel').textContent = `${currentPage} / ${pageCount} 페이지`;
+  element('prevPage').disabled = currentPage === 1;
+  element('nextPage').disabled = currentPage === pageCount;
   element('empty').hidden = list.length > 0;
   const action = element('emptyAction');
   action.hidden = true;
@@ -288,7 +301,7 @@ function render() {
     element('emptyTitle').textContent = '일치하는 태그가 없어요';
     action.hidden = false;
     action.textContent = '검색 지우기';
-    action.onclick = () => { element('search').value = ''; render(); element('search').focus(); };
+    action.onclick = () => { element('search').value = ''; resetPage(); element('search').focus(); };
   } else if (filterFavorites) {
     element('emptyTitle').textContent = '아직 즐겨찾기가 없어요';
     element('emptyText').textContent = '카드의 하트를 눌러 즐겨찾기에 추가해 보세요.';
@@ -301,7 +314,21 @@ function selectTab(showFavorites) {
     element(id).classList.toggle('active', active);
     element(id).setAttribute('aria-pressed', String(active));
   }
+  resetPage();
+}
+
+function resetPage() {
+  currentPage = 1;
   render();
+}
+
+function turnPage(step) {
+  currentPage = Math.max(1, currentPage + step);
+  render();
+  const nextControl = element(step > 0 ? 'nextPage' : 'prevPage');
+  const otherControl = element(step > 0 ? 'prevPage' : 'nextPage');
+  (nextControl.disabled ? otherControl : nextControl).focus({ preventScroll: true });
+  element('resultCount').scrollIntoView({ block: 'start' });
 }
 
 async function loadCollection() {
@@ -318,8 +345,10 @@ async function loadCollection() {
 
 element('allTab').onclick = () => selectTab(false);
 element('favTab').onclick = () => selectTab(true);
-element('search').oninput = render;
-element('sort').onchange = render;
+element('search').oninput = resetPage;
+element('sort').onchange = resetPage;
+element('prevPage').onclick = () => turnPage(-1);
+element('nextPage').onclick = () => turnPage(1);
 element('viewCopy').onclick = () => { if (viewedEntry) copy(viewedEntry.tag); };
 document.querySelectorAll('[data-close]').forEach((button) => {
   button.onclick = () => element(button.dataset.close).close();
