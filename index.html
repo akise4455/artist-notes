@@ -179,7 +179,7 @@ function parseEntries(data) {
     const labels = Array.isArray(entry.labels) ? entry.labels.filter((label) => typeof label === 'string') : [];
     const note = typeof entry.note === 'string' ? entry.note : '';
     const safeImage = /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/;
-    const imageFile = /^images\/[A-Za-z0-9_-]+\.(jpg|png|webp)$/;
+    const imageFile = /^https:\/\/[a-z0-9-]+\.public\.blob\.vercel-storage\.com\/images\/[A-Za-z0-9_-]+\.(jpg|png|webp)$/;
     const image = typeof entry.image === 'string' && (imageFile.test(entry.image) || safeImage.test(entry.image)) ? entry.image : '';
     const created = Number.isFinite(entry.created) ? entry.created : -index;
     return [{ tag, key, labels, note, image, created, index, sample: entry.sample === true }];
@@ -336,9 +336,17 @@ async function loadCollection() {
   loadState = 'loading';
   render();
   try {
-    const response = await fetch('./collection.json', { cache: 'no-cache' });
-    if (!response.ok) throw new Error('Collection unavailable');
-    entries = parseEntries(await response.json());
+    let data = null;
+    try {
+      const live = await fetch('/api/collection');
+      if (live.ok) data = await live.json();
+    } catch { /* 아래의 예전 목록으로 대신 보여준다 */ }
+    if (!data || data.empty || !Array.isArray(data.entries)) {
+      const response = await fetch('./collection.json', { cache: 'no-cache' });
+      if (!response.ok) throw new Error('Collection unavailable');
+      data = await response.json();
+    }
+    entries = parseEntries(data);
     loadState = 'ready';
   } catch { loadState = 'error'; }
   render();

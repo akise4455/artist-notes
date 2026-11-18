@@ -131,34 +131,33 @@ footer { padding: 16px 0 24px; }
       <div class="result-row"><p id="resultCount" aria-live="polite"></p></div>
       <div class="grid" id="grid"></div>
       <div class="empty" id="empty" hidden><span>✧</span><h2 id="emptyTitle">아직 모아둔 태그가 없어요</h2><p id="emptyText">첫 번째 취향을 기록해 보세요.</p><button class="secondary" id="emptyAction">태그 추가하기</button></div>
-      <aside class="tip"><p><strong>저장소 자동 저장</strong><br><span id="syncText">연결 상태를 확인하는 중…</span></p><div class="publish-actions"><button class="primary" id="migrateBtn" hidden>이 브라우저 데이터 합치기</button><button class="text-btn" id="settingsBtn">GitHub 연결 설정</button><a class="text-btn" id="repoLink" href="https://github.com/akise4455/artist-notes" target="_blank" rel="noopener noreferrer">저장소 보기 ↗</a></div></aside>
+      <aside class="tip"><p><strong>온라인 저장</strong><br><span id="syncText">연결 상태를 확인하는 중…</span></p><div class="publish-actions"><button class="primary" id="migrateBtn" hidden>이 브라우저 데이터 합치기</button><button class="text-btn" id="settingsBtn">편집 비밀번호</button></div></aside>
     </section>
   </main>
-  <footer><div><strong>작태 노트</strong><span>취향을 모으는 작은 공간.</span></div><div class="footer-actions"><button id="helpBtn">사용 안내</button><button id="exportBtn">백업 내보내기 ↓</button><button id="importBtn">백업 가져오기 ↑</button><input type="file" id="importFile" accept="application/json,.json" hidden></div><p>저장하면 GitHub 저장소에 바로 커밋되고, 1분쯤 뒤 공개 갤러리에 반영돼요. 이미지는 저장소의 images 폴더에 파일로 저장돼요.</p></footer>
+  <footer><div><strong>작태 노트</strong><span>취향을 모으는 작은 공간.</span></div><div class="footer-actions"><button id="helpBtn">사용 안내</button><button id="exportBtn">백업 내보내기 ↓</button><button id="importBtn">백업 가져오기 ↑</button><input type="file" id="importFile" accept="application/json,.json" hidden></div><p>저장하면 온라인에 바로 저장되고 공개 갤러리에도 곧바로 반영돼요. 어느 기기에서든 편집 비밀번호만 넣으면 편집할 수 있어요.</p></footer>
 </div>
 <dialog id="editor"><form id="editForm"><div class="dialog-heading"><div><p class="eyebrow">YOUR COLLECTION</p><h2 id="editorTitle">새로운 태그 추가</h2></div><button type="button" class="icon-btn" data-close="editor" aria-label="닫기">×</button></div><label class="field">작가 태그 <span class="required">*</span><input id="tagInput" required maxlength="150" placeholder="예: anmi"><small>복사할 태그를 그대로 입력해 주세요.</small></label><label class="field">분류 태그<input id="labelsInput" maxlength="200" placeholder="예: 부드러운 색감, 선화, 테스트 중"><small>쉼표로 구분해 자유롭게 정리할 수 있어요.</small></label><label class="field">메모<textarea id="noteInput" maxlength="1500" rows="3" placeholder="모델 버전, 프롬프트, 마음에 든 특징 등을 기록해 보세요."></textarea></label><div class="field">비교 이미지<div class="upload"><img id="uploadPreview" alt="업로드할 비교 이미지" hidden><label for="imageInput" class="upload-label"><b>＋ 이미지 선택</b><span>JPG · PNG · WebP · 최대 10MB</span></label><input id="imageInput" type="file" accept="image/jpeg,image/png,image/webp" hidden></div><button type="button" class="text-btn remove-image" id="removeImage" hidden>이미지 제거</button></div><p id="formError" class="error" role="alert"></p><div class="dialog-actions"><button type="button" class="danger text-btn" id="deleteBtn" hidden>태그 삭제</button><span></span><button type="button" class="secondary" data-close="editor">취소</button><button type="submit" class="primary" id="saveBtn">저장하기</button></div></form></dialog>
 <dialog id="viewer"><div class="dialog-heading"><div><p class="eyebrow">ARTIST PREVIEW</p><h2 id="viewTitle"></h2></div><button class="icon-btn" data-close="viewer" aria-label="닫기">×</button></div><div id="viewImage"></div><p id="viewNote"></p><div class="dialog-actions"><button class="secondary" id="viewEdit">편집하기</button><button class="primary" id="viewCopy">태그 복사</button></div></dialog>
-<dialog id="help"><div class="dialog-heading"><h2>작태 노트 사용 안내</h2><button class="icon-btn" data-close="help" aria-label="닫기">×</button></div><div class="help-body"><p><b>01 · 처음 한 번 연결하기</b><br>기기마다 처음 한 번 ‘GitHub 연결 설정’에서 토큰을 넣어 주세요. 토큰은 그 기기의 브라우저에만 저장돼요.</p><p><b>02 · 모으고 저장하기</b><br>‘태그 추가’로 작가 태그, 비교 이미지, 분류와 메모를 저장하면 저장소의 collection.json과 images 폴더에 바로 커밋돼요. 공개 갤러리에는 1분쯤 뒤 반영돼요.</p><p><b>03 · 여러 기기에서 쓰기</b><br>다른 기기에서도 같은 저장소를 읽어오므로 어디서든 같은 목록을 편집할 수 있어요. 다른 기기에서 저장한 뒤라면 새로고침하고 편집해 주세요.</p><p><b>04 · 백업</b><br>저장소에 모든 변경 기록이 남아요. ‘백업 내보내기’는 이미지까지 담은 파일 하나로 받아요. ‘백업 가져오기’는 기존 항목에 없는 태그만 추가해요.</p><p>하트(즐겨찾기)는 이 브라우저에만 저장돼요. 이미지는 업로드할 때 최대 1200px로 줄여 저장해요.</p></div></dialog>
-<dialog id="settings"><form id="settingsForm"><div class="dialog-heading"><h2>GitHub 연결</h2><button type="button" class="icon-btn" data-close="settings" aria-label="닫기">×</button></div><div class="help-body"><p id="settingsMsg">저장하려면 이 저장소에 쓸 수 있는 토큰이 필요해요.</p></div><label class="field">저장소<input id="repoInput" required pattern="[A-Za-z0-9_.\-]+/[A-Za-z0-9_.\-]+" placeholder="사용자이름/저장소이름"></label><label class="field">브랜치<input id="branchInput" required placeholder="main"></label><label class="field">토큰<input id="tokenInput" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_…"><small><a class="text-btn" href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">토큰 만들기 ↗</a> Repository access는 ‘Only select repositories’로 이 저장소만 고르고, Permissions의 Contents를 ‘Read and write’로 바꿔 주세요.</small></label><p id="settingsError" class="error" role="alert"></p><div class="dialog-actions"><button type="button" class="danger text-btn" id="disconnectBtn">연결 해제</button><span></span><button type="button" class="secondary" data-close="settings">취소</button><button type="submit" class="primary" id="settingsSave">연결하기</button></div></form></dialog>
+<dialog id="help"><div class="dialog-heading"><h2>작태 노트 사용 안내</h2><button class="icon-btn" data-close="help" aria-label="닫기">×</button></div><div class="help-body"><p><b>01 · 처음 한 번</b><br>기기마다 처음 한 번 ‘편집 비밀번호’를 넣어 주세요. 그 기기가 기억해요.</p><p><b>02 · 모으고 저장하기</b><br>‘태그 추가’로 작가 태그, 비교 이미지, 분류와 메모를 저장하면 온라인에 바로 저장되고 공개 갤러리에도 곧바로 보여요.</p><p><b>03 · 여러 기기에서 쓰기</b><br>어느 기기에서 열어도 같은 목록이 보여요. 다른 기기에서 저장한 뒤라면 새로고침하고 편집해 주세요.</p><p><b>04 · 백업</b><br>‘백업 내보내기’는 이미지까지 담은 파일 하나로 받아요. ‘백업 가져오기’는 기존 항목에 없는 태그만 추가해요.</p><p>하트(즐겨찾기)는 이 브라우저에만 저장돼요. 이미지는 업로드할 때 최대 1200px로 줄여 저장해요.</p></div></dialog>
+<dialog id="settings"><form id="settingsForm"><div class="dialog-heading"><h2>편집 비밀번호</h2><button type="button" class="icon-btn" data-close="settings" aria-label="닫기">×</button></div><div class="help-body"><p id="settingsMsg"></p></div><label class="field">비밀번호<input id="passwordInput" type="password" autocomplete="current-password"></label><p id="settingsError" class="error" role="alert"></p><div class="dialog-actions"><button type="button" class="danger text-btn" id="disconnectBtn">이 기기에서 지우기</button><span></span><button type="button" class="secondary" data-close="settings">취소</button><button type="submit" class="primary" id="settingsSave">확인</button></div></form></dialog>
 <dialog id="copyDialog"><div class="dialog-heading"><h2>태그 복사</h2><button class="icon-btn" data-close="copyDialog" aria-label="닫기">×</button></div><p>아래 태그를 선택해 복사해 주세요.</p><textarea id="copyText" readonly rows="3" aria-label="복사할 태그"></textarea></dialog>
 <div class="toast" id="toast" role="status"></div>
 <script>'use strict';
 const $ = id => document.getElementById(id);
 const OLD_KEY = 'artist-notes-v1';            // 예전 버전이 브라우저에 저장하던 데이터
-const CFG_KEY = 'artist-notes-github';        // 이 기기의 GitHub 연결 설정
+const PW_KEY = 'artist-notes-password';       // 이 기기에 기억한 편집 비밀번호
 const FAV_KEY = 'artist-notes-editor-favorites';
-const DATA_PATH = 'collection.json';
-const IMAGE_PATH = /^images\/[A-Za-z0-9_-]+\.(jpg|png|webp)$/;
+const IMAGE_URL = /^https:\/\/[a-z0-9-]+\.public\.blob\.vercel-storage\.com\/images\/[A-Za-z0-9_-]+\.(jpg|png|webp)$/;
 const DATA_IMAGE = /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/;
 
 let entries = [], onlyFavorites = false, editing = null, draftImage = '', imagePending = false, viewId = null, toastTimer;
-let busy = false, loaded = false, loadedHead = null;
-const imageCache = new Map(); // 이번 세션에 올린 이미지: 경로 → data URL (Pages 반영 전에도 보이도록)
+let busy = false, loaded = false, etag = null;
+const uploaded = new Map(); // 이미 올린 data: 이미지 → URL (저장 실패 후 다시 시도할 때 또 올리지 않도록)
 
 let favorites = new Set();
 try { const f = JSON.parse(localStorage.getItem(FAV_KEY) || '[]'); if (Array.isArray(f)) favorites = new Set(f); } catch {}
-let cfg = { token: '', repo: 'akise4455/artist-notes', branch: 'main' };
-try { Object.assign(cfg, JSON.parse(localStorage.getItem(CFG_KEY) || '{}')); } catch {}
+let password = '';
+try { password = localStorage.getItem(PW_KEY) || ''; } catch {}
 
 const keyOf = x => x.tag.toLocaleLowerCase();
 const newId = () => crypto.randomUUID().replace(/-/g, '').slice(0, 16);
@@ -175,7 +174,7 @@ function validate(data) {
     ids.add(id);
     let image = '';
     if (typeof x.image === 'string' && x.image) {
-      if (IMAGE_PATH.test(x.image) || (x.image.length <= 14000000 && DATA_IMAGE.test(x.image))) image = x.image;
+      if (IMAGE_URL.test(x.image) || (x.image.length <= 14000000 && DATA_IMAGE.test(x.image))) image = x.image;
       else throw Error('이미지 형식을 확인해 주세요.');
     }
     const tag = x.tag.trim();
@@ -190,113 +189,77 @@ function validate(data) {
   });
 }
 
-/* ---------- GitHub ---------- */
-function ghMessage(status, msg) {
-  if (status === 401) return '토큰이 올바르지 않거나 만료됐어요. GitHub 연결 설정을 확인해 주세요.';
-  if (status === 403 || status === 404) return '저장소에 쓸 수 없어요. 토큰 권한(Contents: Read and write)과 저장소 이름을 확인해 주세요.';
-  if (status === 409 || status === 422) return '다른 곳에서 먼저 저장된 내용이 있어요. 새로고침한 뒤 다시 저장해 주세요.';
-  return 'GitHub 오류(' + status + ')' + (msg ? ': ' + msg : '');
-}
-async function gh(path, { method = 'GET', body, raw = false } = {}) {
+/* ---------- 서버(Vercel) ---------- */
+async function api(path, body) {
   let r;
   try {
-    r = await fetch('https://api.github.com/repos/' + cfg.repo + path, {
-      method, cache: 'no-store',
-      headers: {
-        Accept: raw ? 'application/vnd.github.raw+json' : 'application/vnd.github+json',
-        Authorization: 'Bearer ' + cfg.token,
-        'X-GitHub-Api-Version': '2022-11-28',
-        ...(body ? { 'Content-Type': 'application/json' } : {}),
-      },
+    r = await fetch('/api/' + path, {
+      method: body ? 'POST' : 'GET', cache: 'no-store',
+      headers: { ...(body ? { 'Content-Type': 'application/json' } : {}), 'x-edit-password': encodeURIComponent(password) },
       body: body ? JSON.stringify(body) : undefined,
     });
-  } catch { throw Error('GitHub에 연결하지 못했어요. 인터넷 연결을 확인해 주세요.'); }
-  if (!r.ok) { let msg = ''; try { msg = (await r.json()).message; } catch {} const e = Error(ghMessage(r.status, msg)); e.status = r.status; throw e; }
-  return raw ? r.text() : r.json();
+  } catch { throw Error('서버에 연결하지 못했어요. 인터넷 연결을 확인해 주세요.'); }
+  let data = {};
+  try { data = await r.json(); } catch {}
+  if (!r.ok) { const e = Error(data.error || '서버 오류(' + r.status + ')가 났어요.'); e.status = r.status; throw e; }
+  return data;
 }
-
-function imageSrc(path) {
-  if (!IMAGE_PATH.test(path)) return path;
-  return imageCache.get(path) || path;
-}
-function rawUrl(path) { return 'https://raw.githubusercontent.com/' + cfg.repo + '/' + (loadedHead || cfg.branch) + '/' + path; }
 
 async function load() {
   loaded = false; setSync('목록을 불러오는 중…'); render();
   try {
-    let text;
-    if (cfg.token) {
-      const ref = await gh('/git/ref/heads/' + encodeURIComponent(cfg.branch));
-      loadedHead = ref.object.sha;
-      try { text = await gh('/contents/' + DATA_PATH + '?ref=' + loadedHead, { raw: true }); }
-      catch (e) { if (e.status === 404) text = '{"entries":[]}'; else throw e; }
-    } else {
-      loadedHead = null;
-      const r = await fetch('./' + DATA_PATH, { cache: 'no-cache' });
-      text = r.status === 404 ? '{"entries":[]}' : r.ok ? await r.text() : null;
-      if (text === null) throw Error('목록을 불러오지 못했어요.');
+    let data = null;
+    try { data = await api('collection?fresh=1'); } catch {}
+    if (data && !data.empty) { entries = validate(data).filter(x => !x.sample); etag = data.etag || null; }
+    else {
+      // 아직 온라인 저장공간이 비어 있으면, 저장소에 들어 있던 예전 목록을 읽어온다. 첫 저장 때 옮겨진다.
+      const r = await fetch('./collection.json', { cache: 'no-cache' });
+      entries = r.ok ? validate(await r.json()).filter(x => !x.sample) : [];
+      etag = null;
     }
-    entries = validate(JSON.parse(text)).filter(x => !x.sample);
     loaded = true;
     updateSync();
   } catch (e) {
     entries = [];
-    setSync((e.message || '목록을 불러오지 못했어요.') + ' 새로고침하거나 연결 설정을 확인해 주세요.');
+    setSync((e.message || '목록을 불러오지 못했어요.') + ' 새로고침해 주세요.');
   }
   render();
   checkLegacy();
 }
 
-/* 목록을 저장소에 커밋. data: 이미지는 images/ 파일로 바꾸고, 더 이상 쓰지 않는 이미지 파일은 지운다. */
-async function commit(next, message) {
+/* 목록 전체를 저장. 새 이미지는 먼저 하나씩 올리고, 목록에는 이미지 주소만 넣는다. */
+async function commit(next) {
   if (busy) return false;
-  if (!cfg.token) { openSettings('저장하려면 먼저 GitHub를 연결해 주세요.'); return false; }
+  if (!password) { openSettings('저장하려면 편집 비밀번호를 넣어 주세요.'); return false; }
   if (!loaded) { toast('목록을 불러온 뒤에 저장할 수 있어요.'); return false; }
   setBusy(true);
   const before = $('syncText').textContent;
   try {
-    setSync('저장 중…');
-    const head = (await gh('/git/ref/heads/' + encodeURIComponent(cfg.branch))).object.sha;
-    if (loadedHead && head !== loadedHead) {
-      const cmp = await gh('/compare/' + loadedHead + '...' + head);
-      if (cmp.status !== 'ahead' || (cmp.files || []).some(f => f.filename === DATA_PATH || f.filename.startsWith('images/')))
-        throw Error('다른 기기에서 먼저 저장한 내용이 있어요. 새로고침한 뒤 다시 저장해 주세요.');
-    }
-    const headCommit = await gh('/git/commits/' + head);
-    const tree = await gh('/git/trees/' + headCommit.tree.sha + '?recursive=1');
-    const existing = new Set(tree.tree.filter(t => t.type === 'blob').map(t => t.path));
-    const items = [], out = [];
-    const toUpload = next.filter(x => DATA_IMAGE.test(x.image)).length;
-    let uploaded = 0;
+    const out = [];
+    const toUpload = next.filter(x => DATA_IMAGE.test(x.image) && !uploaded.has(x.image)).length;
+    let done = 0;
     for (const x of next) {
       let image = x.image;
       if (DATA_IMAGE.test(image)) {
-        setSync('이미지 올리는 중… ' + (++uploaded) + '/' + toUpload);
-        const [, mime, b64] = image.match(/^data:image\/(\w+);base64,(.*)$/);
-        const path = 'images/' + newId() + '.' + (mime === 'jpeg' ? 'jpg' : mime);
-        const blob = await gh('/git/blobs', { method: 'POST', body: { content: b64, encoding: 'base64' } });
-        items.push({ path, mode: '100644', type: 'blob', sha: blob.sha });
-        imageCache.set(path, image);
-        image = path;
+        if (!uploaded.has(image)) {
+          setSync('이미지 올리는 중… ' + (++done) + '/' + toUpload);
+          uploaded.set(image, (await api('image', { data: image })).url);
+        }
+        image = uploaded.get(image);
       }
       out.push({ ...x, image });
     }
-    const used = new Set(out.map(x => x.image).filter(Boolean));
-    for (const p of existing) if (p.startsWith('images/') && !used.has(p)) items.push({ path: p, mode: '100644', type: 'blob', sha: null });
-    const data = { version: 2, entries: out.map(({ id, tag, labels, note, image, created }) => ({ id, tag, labels, note, image, created })) };
-    items.push({ path: DATA_PATH, mode: '100644', type: 'blob', content: JSON.stringify(data, null, 2) + '\n' });
-    setSync('커밋하는 중…');
-    const newTree = await gh('/git/trees', { method: 'POST', body: { base_tree: headCommit.tree.sha, tree: items } });
-    const c = await gh('/git/commits', { method: 'POST', body: { message, tree: newTree.sha, parents: [head] } });
-    await gh('/git/refs/heads/' + encodeURIComponent(cfg.branch), { method: 'PATCH', body: { sha: c.sha } });
-    loadedHead = c.sha;
+    setSync('저장 중…');
+    const res = await api('save', { etag, entries: out.map(({ id, tag, labels, note, image, created }) => ({ id, tag, labels, note, image, created })) });
+    etag = res.etag;
     entries = out;
     render();
-    setSync('저장했어요. 공개 갤러리에는 1분쯤 뒤 반영돼요.');
+    setSync('저장했어요. 공개 갤러리에도 바로 반영돼요.');
     return true;
   } catch (e) {
     setSync(before);
-    toast(e.message || '저장하지 못했어요.');
+    if (e.status === 401) openSettings('비밀번호가 맞지 않아요. 다시 넣어 주세요.');
+    else toast(e.message || '저장하지 못했어요.');
     return false;
   } finally { setBusy(false); }
 }
@@ -308,9 +271,8 @@ function setBusy(on) {
 }
 function setSync(text) { $('syncText').textContent = text; }
 function updateSync() {
-  $('repoLink').href = 'https://github.com/' + cfg.repo;
-  if (!cfg.token) setSync('이 기기는 아직 GitHub에 연결되지 않았어요. 보기만 할 수 있어요. 연결하면 저장할 때마다 저장소에 바로 커밋돼요.');
-  else setSync(cfg.repo + ' (' + cfg.branch + ')에 연결됐어요. 저장하면 바로 커밋되고 공개 갤러리에는 1분쯤 뒤 반영돼요.');
+  if (!password) setSync('이 기기에서는 아직 편집 비밀번호를 넣지 않았어요. 보기만 할 수 있어요.');
+  else setSync('편집할 수 있어요. 저장하면 어느 기기에서든 같은 목록이 보여요.');
 }
 
 /* ---------- 예전 브라우저 데이터 옮기기 ---------- */
@@ -324,51 +286,51 @@ function checkLegacy() {
   $('migrateBtn').textContent = '이 브라우저 데이터 ' + extra.length + '개 합치기';
 }
 $('migrateBtn').onclick = async () => {
+  if (!password) { openSettings('데이터를 합치려면 편집 비밀번호를 넣어 주세요.'); return; }
   const known = new Set(entries.map(keyOf));
   const added = [];
   for (const x of readLegacy()) if (!known.has(keyOf(x))) { added.push({ ...x, id: newId() }); known.add(keyOf(x)); }
   if (!added.length) { checkLegacy(); return; }
-  if (!confirm('이 브라우저에만 있던 태그 ' + added.length + '개를 저장소에 추가할까요? 같은 태그는 건너뛰어요.')) return;
-  if (await commit([...added, ...entries], '이 브라우저 데이터 ' + added.length + '개 합치기')) {
+  if (!confirm('이 브라우저에만 있던 태그 ' + added.length + '개를 추가할까요? 같은 태그는 건너뛰어요.')) return;
+  if (await commit([...added, ...entries])) {
     try { localStorage.removeItem(OLD_KEY); } catch {}
     checkLegacy();
-    toast(added.length + '개를 저장소로 옮겼어요.');
+    toast(added.length + '개를 옮겼어요.');
   }
 };
 
-/* ---------- 연결 설정 ---------- */
+/* ---------- 편집 비밀번호 ---------- */
 function openSettings(message) {
-  $('settingsMsg').textContent = message || '저장하려면 이 저장소에 쓸 수 있는 토큰이 필요해요. 토큰은 이 기기 브라우저에만 저장돼요.';
-  $('repoInput').value = cfg.repo; $('branchInput').value = cfg.branch; $('tokenInput').value = cfg.token;
-  $('settingsError').textContent = ''; $('disconnectBtn').hidden = !cfg.token;
+  $('settingsMsg').textContent = message || '편집 비밀번호를 넣으면 이 기기에서 태그를 추가하고 고칠 수 있어요. 한 번 넣으면 이 기기가 기억해요.';
+  $('passwordInput').value = '';
+  $('settingsError').textContent = ''; $('disconnectBtn').hidden = !password;
   $('settings').showModal();
+  $('passwordInput').focus();
 }
 $('settingsBtn').onclick = () => openSettings();
 $('settingsForm').onsubmit = async e => {
   e.preventDefault();
-  const next = { repo: $('repoInput').value.trim(), branch: $('branchInput').value.trim() || 'main', token: $('tokenInput').value.trim() };
-  if (!next.token) { $('settingsError').textContent = '토큰을 입력해 주세요.'; return; }
+  const next = $('passwordInput').value;
+  if (!next) { $('settingsError').textContent = '비밀번호를 넣어 주세요.'; return; }
   $('settingsSave').disabled = true; $('settingsError').textContent = '';
-  const prev = cfg; cfg = { ...cfg, ...next };
+  const prev = password; password = next;
   try {
-    const repo = await gh('');
-    if (!repo.permissions?.push) throw Error('이 토큰으로는 저장소에 쓸 수 없어요. Contents 권한을 Read and write로 바꿔 주세요.');
-    await gh('/git/ref/heads/' + encodeURIComponent(cfg.branch));
-    try { localStorage.setItem(CFG_KEY, JSON.stringify(cfg)); } catch { throw Error('이 브라우저에 설정을 저장할 수 없어요.'); }
+    await api('check', {});
+    try { localStorage.setItem(PW_KEY, password); } catch {}
     $('settings').close();
-    toast('GitHub에 연결했어요.');
-    load();
+    updateSync();
+    toast('이제 이 기기에서 편집할 수 있어요.');
   } catch (err) {
-    cfg = prev;
-    $('settingsError').textContent = err.status === 404 ? '저장소나 브랜치를 찾을 수 없어요. 이름과 토큰 권한을 확인해 주세요.' : err.message;
+    password = prev;
+    $('settingsError').textContent = err.message;
   } finally { $('settingsSave').disabled = false; }
 };
 $('disconnectBtn').onclick = () => {
-  if (!confirm('이 기기에서 GitHub 연결을 해제할까요? 저장소의 데이터는 그대로 남아요.')) return;
-  cfg = { ...cfg, token: '' };
-  try { localStorage.setItem(CFG_KEY, JSON.stringify(cfg)); } catch {}
+  if (!confirm('이 기기에서 편집 비밀번호를 지울까요? 저장된 목록은 그대로 남아요.')) return;
+  password = '';
+  try { localStorage.removeItem(PW_KEY); } catch {}
   $('settings').close();
-  load();
+  updateSync();
 };
 
 /* ---------- 화면 ---------- */
@@ -378,8 +340,7 @@ function placeholder(index) { const n = el('div', 'placeholder tone-' + (index %
 function imageContent(entry, index) {
   if (!entry.image) return placeholder(index);
   const img = el('img');
-  img.src = imageSrc(entry.image);
-  if (IMAGE_PATH.test(entry.image)) img.onerror = () => { img.onerror = null; img.src = rawUrl(entry.image); };
+  img.src = entry.image;
   img.alt = entry.tag + ' 비교 이미지'; img.loading = 'lazy';
   return img;
 }
@@ -414,9 +375,9 @@ function render() {
   $('emptyAction').textContent = q ? '검색 지우기' : onlyFavorites ? '전체 모음 보기' : '태그 추가하기';
 }
 function setTab(fav) { onlyFavorites = fav; for (const [id, on] of [['allTab', !fav], ['favTab', fav]]) { $(id).classList.toggle('active', on); $(id).setAttribute('aria-pressed', String(on)); } render(); }
-function updatePreview() { $('uploadPreview').hidden = !draftImage; $('removeImage').hidden = !draftImage; if (draftImage) $('uploadPreview').src = imageSrc(draftImage); else $('uploadPreview').removeAttribute('src'); }
+function updatePreview() { $('uploadPreview').hidden = !draftImage; $('removeImage').hidden = !draftImage; if (draftImage) $('uploadPreview').src = draftImage; else $('uploadPreview').removeAttribute('src'); }
 function openEditor(id = null) {
-  if (!cfg.token) { openSettings('태그를 추가하거나 고치려면 먼저 GitHub를 연결해 주세요.'); return; }
+  if (!password) { openSettings('태그를 추가하거나 고치려면 편집 비밀번호를 넣어 주세요.'); return; }
   editing = id; const x = entries.find(e => e.id === id);
   $('editorTitle').textContent = x ? '태그 편집' : '새로운 태그 추가';
   $('tagInput').value = x?.tag || ''; $('labelsInput').value = x?.labels.join(', ') || ''; $('noteInput').value = x?.note || '';
@@ -465,9 +426,8 @@ document.addEventListener('keydown', e => { if (e.key === '/' && !document.query
 
 /* ---------- 백업: 이미지까지 담은 파일 하나로 ---------- */
 async function toDataUrl(path) {
-  if (!IMAGE_PATH.test(path)) return path;
-  if (imageCache.has(path)) return imageCache.get(path);
-  for (const url of [path, rawUrl(path)]) {
+  if (!IMAGE_URL.test(path)) return path;
+  for (const url of [path]) {
     try { const r = await fetch(url); if (!r.ok) continue; const b = await r.blob(); return await new Promise((ok, bad) => { const f = new FileReader(); f.onload = () => ok(f.result); f.onerror = bad; f.readAsDataURL(b); }); } catch {}
   }
   return '';
@@ -482,7 +442,7 @@ $('exportBtn').onclick = async () => {
     toast('백업 파일을 내려받았어요.');
   } finally { setBusy(false); }
 };
-$('importBtn').onclick = () => { if (!cfg.token) { openSettings('백업을 가져오려면 먼저 GitHub를 연결해 주세요.'); return; } $('importFile').click(); };
+$('importBtn').onclick = () => { if (!password) { openSettings('백업을 가져오려면 편집 비밀번호를 넣어 주세요.'); return; } $('importFile').click(); };
 $('importFile').onchange = async () => {
   const file = $('importFile').files[0]; if (!file) return;
   try {
