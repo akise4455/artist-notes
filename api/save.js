@@ -1,4 +1,4 @@
-import { put, list, del } from '@vercel/blob';
+import { put, list, del, BlobPreconditionFailedError } from '@vercel/blob';
 import { COLLECTION, IMAGE_URL, guard, json } from './_lib.js';
 
 function clean(entries) {
@@ -45,10 +45,11 @@ export async function POST(request) {
   let blob;
   try { blob = await put(COLLECTION, text, options); }
   catch (error) {
-    if (error?.name === 'BlobPreconditionFailedError' || /exist/i.test(error?.message || ''))
+    if (error instanceof BlobPreconditionFailedError || /exist|precondition/i.test(error?.message || ''))
       return json({ error: '다른 기기에서 먼저 저장한 내용이 있어요. 새로고침한 뒤 다시 저장해 주세요.', conflict: true }, 409);
-    return json({ error: '저장하지 못했어요. 잠시 뒤 다시 시도해 주세요.' }, 500);
+    console.error('save failed', error);
+    return json({ error: '저장하지 못했어요. (' + (error?.message || error) + ')' }, 500);
   }
-  try { await removeUnusedImages(entries); } catch { /* 정리는 다음 저장 때 다시 시도 */ }
+  try { await removeUnusedImages(entries); } catch (error) { console.error('cleanup failed', error); /* 다음 저장 때 다시 시도 */ }
   return json({ ok: true, etag: blob.etag });
 }

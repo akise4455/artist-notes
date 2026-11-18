@@ -18,7 +18,8 @@ export async function POST(request) {
       access: 'public', addRandomSuffix: false, contentType: `image/${match[1]}`, cacheControlMaxAge: 31536000,
     });
     return json({ url: blob.url });
-  } catch {
-    return json({ error: '이미지를 저장하지 못했어요. 잠시 뒤 다시 시도해 주세요.' }, 500);
+  } catch (error) {
+    console.error('image upload failed', error);
+    return json({ error: '이미지를 저장하지 못했어요. (' + (error?.message || error) + ')' }, 500);
   }
 }
