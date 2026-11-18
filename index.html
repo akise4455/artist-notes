@@ -179,7 +179,8 @@ function parseEntries(data) {
     const labels = Array.isArray(entry.labels) ? entry.labels.filter((label) => typeof label === 'string') : [];
     const note = typeof entry.note === 'string' ? entry.note : '';
     const safeImage = /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/;
-    const image = typeof entry.image === 'string' && safeImage.test(entry.image) ? entry.image : '';
+    const imageFile = /^images\/[A-Za-z0-9_-]+\.(jpg|png|webp)$/;
+    const image = typeof entry.image === 'string' && (imageFile.test(entry.image) || safeImage.test(entry.image)) ? entry.image : '';
     const created = Number.isFinite(entry.created) ? entry.created : -index;
     return [{ tag, key, labels, note, image, created, index, sample: entry.sample === true }];
   });

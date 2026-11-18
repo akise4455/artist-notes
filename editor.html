@@ -131,67 +131,372 @@ footer { padding: 16px 0 24px; }
       <div class="result-row"><p id="resultCount" aria-live="polite"></p></div>
       <div class="grid" id="grid"></div>
       <div class="empty" id="empty" hidden><span>✧</span><h2 id="emptyTitle">아직 모아둔 태그가 없어요</h2><p id="emptyText">첫 번째 취향을 기록해 보세요.</p><button class="secondary" id="emptyAction">태그 추가하기</button></div>
-      <aside class="tip"><p><strong>목록 게시</strong><br>공개용 목록을 받은 뒤 GitHub에 올리면 태그, 이미지, 메모가 방문자에게 보입니다.</p><div class="publish-actions"><button class="primary" id="publishFile">공개용 목록 받기</button><a class="text-btn" href="https://github.com/akise4455/artist-notes/upload/main" target="_blank" rel="noopener noreferrer">GitHub에 올리기 ↗</a></div></aside>
+      <aside class="tip"><p><strong>저장소 자동 저장</strong><br><span id="syncText">연결 상태를 확인하는 중…</span></p><div class="publish-actions"><button class="primary" id="migrateBtn" hidden>이 브라우저 데이터 합치기</button><button class="text-btn" id="settingsBtn">GitHub 연결 설정</button><a class="text-btn" id="repoLink" href="https://github.com/akise4455/artist-notes" target="_blank" rel="noopener noreferrer">저장소 보기 ↗</a></div></aside>
     </section>
   </main>
-  <footer><div><strong>작태 노트</strong><span>취향을 모으는 작은 공간.</span></div><div class="footer-actions"><button id="helpBtn">사용 안내</button><button id="exportBtn">백업 내보내기 ↓</button><button id="importBtn">백업 가져오기 ↑</button><input type="file" id="importFile" accept="application/json,.json" hidden></div><p>추가한 내용은 이 브라우저에 저장돼요. 다른 기기로 옮길 때는 백업을 이용해 주세요.</p></footer>
+  <footer><div><strong>작태 노트</strong><span>취향을 모으는 작은 공간.</span></div><div class="footer-actions"><button id="helpBtn">사용 안내</button><button id="exportBtn">백업 내보내기 ↓</button><button id="importBtn">백업 가져오기 ↑</button><input type="file" id="importFile" accept="application/json,.json" hidden></div><p>저장하면 GitHub 저장소에 바로 커밋되고, 1분쯤 뒤 공개 갤러리에 반영돼요. 이미지는 저장소의 images 폴더에 파일로 저장돼요.</p></footer>
 </div>
 <dialog id="editor"><form id="editForm"><div class="dialog-heading"><div><p class="eyebrow">YOUR COLLECTION</p><h2 id="editorTitle">새로운 태그 추가</h2></div><button type="button" class="icon-btn" data-close="editor" aria-label="닫기">×</button></div><label class="field">작가 태그 <span class="required">*</span><input id="tagInput" required maxlength="150" placeholder="예: anmi"><small>복사할 태그를 그대로 입력해 주세요.</small></label><label class="field">분류 태그<input id="labelsInput" maxlength="200" placeholder="예: 부드러운 색감, 선화, 테스트 중"><small>쉼표로 구분해 자유롭게 정리할 수 있어요.</small></label><label class="field">메모<textarea id="noteInput" maxlength="1500" rows="3" placeholder="모델 버전, 프롬프트, 마음에 든 특징 등을 기록해 보세요."></textarea></label><div class="field">비교 이미지<div class="upload"><img id="uploadPreview" alt="업로드할 비교 이미지" hidden><label for="imageInput" class="upload-label"><b>＋ 이미지 선택</b><span>JPG · PNG · WebP · 최대 10MB</span></label><input id="imageInput" type="file" accept="image/jpeg,image/png,image/webp" hidden></div><button type="button" class="text-btn remove-image" id="removeImage" hidden>이미지 제거</button></div><p id="formError" class="error" role="alert"></p><div class="dialog-actions"><button type="button" class="danger text-btn" id="deleteBtn" hidden>태그 삭제</button><span></span><button type="button" class="secondary" data-close="editor">취소</button><button type="submit" class="primary" id="saveBtn">저장하기</button></div></form></dialog>
 <dialog id="viewer"><div class="dialog-heading"><div><p class="eyebrow">ARTIST PREVIEW</p><h2 id="viewTitle"></h2></div><button class="icon-btn" data-close="viewer" aria-label="닫기">×</button></div><div id="viewImage"></div><p id="viewNote"></p><div class="dialog-actions"><button class="secondary" id="viewEdit">편집하기</button><button class="primary" id="viewCopy">태그 복사</button></div></dialog>
-<dialog id="help"><div class="dialog-heading"><h2>작태 노트 사용 안내</h2><button class="icon-btn" data-close="help" aria-label="닫기">×</button></div><div class="help-body"><p><b>01 · 모으기</b><br>‘태그 추가’로 작가 태그, 비교 이미지, 분류와 메모를 저장하세요. 처음 들어 있는 태그는 예시이며 모델별 효과를 검증한 목록은 아니에요.</p><p><b>02 · 찾고 복사하기</b><br>검색으로 원하는 카드를 찾고, 작가 이름을 눌러 복사하세요. 하트로 즐겨찾기를 모을 수 있어요. 이미지를 누르면 크게 열립니다.</p><p><b>03 · 안전하게 보관하기</b><br>변경 내용은 현재 기기의 브라우저에 저장됩니다. 브라우저 데이터를 지우면 사라질 수 있으니 ‘백업 내보내기’로 보관하세요. 가져오기는 기존 항목에 없는 태그를 추가합니다.</p><p>이미지는 업로드할 때 최대 1200px로 줄여 저장해요. 저장 공간이 가득 차면 백업 후 불필요한 이미지를 정리해 주세요.</p></div></dialog>
+<dialog id="help"><div class="dialog-heading"><h2>작태 노트 사용 안내</h2><button class="icon-btn" data-close="help" aria-label="닫기">×</button></div><div class="help-body"><p><b>01 · 처음 한 번 연결하기</b><br>기기마다 처음 한 번 ‘GitHub 연결 설정’에서 토큰을 넣어 주세요. 토큰은 그 기기의 브라우저에만 저장돼요.</p><p><b>02 · 모으고 저장하기</b><br>‘태그 추가’로 작가 태그, 비교 이미지, 분류와 메모를 저장하면 저장소의 collection.json과 images 폴더에 바로 커밋돼요. 공개 갤러리에는 1분쯤 뒤 반영돼요.</p><p><b>03 · 여러 기기에서 쓰기</b><br>다른 기기에서도 같은 저장소를 읽어오므로 어디서든 같은 목록을 편집할 수 있어요. 다른 기기에서 저장한 뒤라면 새로고침하고 편집해 주세요.</p><p><b>04 · 백업</b><br>저장소에 모든 변경 기록이 남아요. ‘백업 내보내기’는 이미지까지 담은 파일 하나로 받아요. ‘백업 가져오기’는 기존 항목에 없는 태그만 추가해요.</p><p>하트(즐겨찾기)는 이 브라우저에만 저장돼요. 이미지는 업로드할 때 최대 1200px로 줄여 저장해요.</p></div></dialog>
+<dialog id="settings"><form id="settingsForm"><div class="dialog-heading"><h2>GitHub 연결</h2><button type="button" class="icon-btn" data-close="settings" aria-label="닫기">×</button></div><div class="help-body"><p id="settingsMsg">저장하려면 이 저장소에 쓸 수 있는 토큰이 필요해요.</p></div><label class="field">저장소<input id="repoInput" required pattern="[A-Za-z0-9_.\-]+/[A-Za-z0-9_.\-]+" placeholder="사용자이름/저장소이름"></label><label class="field">브랜치<input id="branchInput" required placeholder="main"></label><label class="field">토큰<input id="tokenInput" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_…"><small><a class="text-btn" href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">토큰 만들기 ↗</a> Repository access는 ‘Only select repositories’로 이 저장소만 고르고, Permissions의 Contents를 ‘Read and write’로 바꿔 주세요.</small></label><p id="settingsError" class="error" role="alert"></p><div class="dialog-actions"><button type="button" class="danger text-btn" id="disconnectBtn">연결 해제</button><span></span><button type="button" class="secondary" data-close="settings">취소</button><button type="submit" class="primary" id="settingsSave">연결하기</button></div></form></dialog>
 <dialog id="copyDialog"><div class="dialog-heading"><h2>태그 복사</h2><button class="icon-btn" data-close="copyDialog" aria-label="닫기">×</button></div><p>아래 태그를 선택해 복사해 주세요.</p><textarea id="copyText" readonly rows="3" aria-label="복사할 태그"></textarea></dialog>
 <div class="toast" id="toast" role="status"></div>
 <script>'use strict';
 const $ = id => document.getElementById(id);
-const KEY = 'artist-notes-v1';
-const examples = ['anmi','kanzarin','nyatabe','hana soretsu','sano yuuto','otimusyairoha'].map((tag,i)=>({id:'sample-'+i,tag,labels:['예시 태그'],note:'비교 이미지와 메모를 채워 보세요.',image:'',favorite:false,sample:true,created:1700000000000-i}));
-let entries, onlyFavorites=false, editing=null, draftImage='', imagePending=false, viewId=null, toastTimer;
-try {const raw=localStorage.getItem(KEY); entries=raw ? validate(JSON.parse(raw)) : examples;} catch {entries=examples;setTimeout(()=>toast('저장된 데이터를 읽지 못했어요. 백업 파일을 확인해 주세요.'),200);}
-function validate(data){const list=Array.isArray(data)?data:data.entries;if(!Array.isArray(list)||list.length>2000)throw Error('올바른 백업 파일이 아니에요.');const ids=new Set();return list.map((x,i)=>{if(!x||typeof x.tag!=='string'||!x.tag.trim()||x.tag.length>150)throw Error('태그 형식을 확인해 주세요.');let id=typeof x.id==='string'?x.id:crypto.randomUUID();if(ids.has(id))id=crypto.randomUUID();ids.add(id);if(x.image && (typeof x.image!=='string'||!/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(x.image)||x.image.length>14000000))throw Error('백업의 이미지 형식을 확인해 주세요.');return {id,tag:x.tag.trim(),labels:Array.isArray(x.labels)?x.labels.filter(v=>typeof v==='string').slice(0,20).map(v=>v.slice(0,50)):[],note:typeof x.note==='string'?x.note.slice(0,1500):'',image:x.image||'',favorite:x.favorite===true,sample:x.sample===true,created:Number.isFinite(x.created)?x.created:Date.now()+i};});}
-function commit(next){try{localStorage.setItem(KEY,JSON.stringify(next));entries=next;render();return true;}catch{toast('저장 공간이 부족하거나 차단되어 있어요. 백업 후 이미지를 정리해 주세요.');return false;}}
-function toast(message){$('toast').textContent=message;$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),3200);}
-function el(tag,cls,text){const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=text;return n;}
-function placeholder(index){const n=el('div','placeholder tone-'+(index%6));n.append(el('span','big',String(index+1).padStart(2,'0')),el('span','line'),el('span','caption','YOUR NEXT INSPIRATION'),el('small','','비교 이미지를 채워 주세요'));return n;}
-function imageContent(entry,index){if(!entry.image)return placeholder(index);const img=el('img');img.src=entry.image;img.alt=entry.tag+' 비교 이미지';img.loading='lazy';return img;}
-function render(){const q=$('search').value.trim().toLocaleLowerCase();let list=entries.filter(x=>(!onlyFavorites||x.favorite)&&[x.tag,...x.labels,x.note].join(' ').toLocaleLowerCase().includes(q));const sort=$('sort').value;list.sort(sort==='name'?(a,b)=>a.tag.localeCompare(b.tag):sort==='old'?(a,b)=>a.created-b.created:(a,b)=>b.created-a.created);$('allCount').textContent=entries.length;$('favCount').textContent=entries.filter(x=>x.favorite).length;$('resultCount').replaceChildren(document.createTextNode(q?'검색 결과 ':onlyFavorites?'즐겨찾기 ':'총 '),el('strong','',String(list.length)),document.createTextNode(' 개'));$('grid').replaceChildren();
-for(const x of list){const index=entries.findIndex(e=>e.id===x.id);const card=el('article','card');const wrap=el('div','image-wrap');const imageBtn=el('button','image-btn');imageBtn.setAttribute('aria-label',x.tag+' 크게 보기');imageBtn.append(imageContent(x,index));imageBtn.onclick=()=>openViewer(x.id);const fav=el('button','fav'+(x.favorite?' selected':''),x.favorite?'♥':'♡');fav.setAttribute('aria-label',x.tag+' 즐겨찾기');fav.setAttribute('aria-pressed',String(x.favorite));fav.onclick=()=>commit(entries.map(e=>e.id===x.id?{...e,favorite:!e.favorite}:e));wrap.append(imageBtn,fav);const body=el('div','card-body');const num=el('div','card-number','NO. '+String(index+1).padStart(3,'0'));if(x.sample)num.append(el('small','','SAMPLE'));const row=el('div','name-row');const name=el('button','tag-name');name.title=x.tag+' 복사';name.setAttribute('aria-label',x.tag+' 태그 복사');name.append(el('span','',x.tag));name.insertAdjacentHTML('beforeend','<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5" y="5" width="8" height="9" rx="1.5"/><path d="M10 3V2H2v9h1"/></svg>');name.onclick=()=>copy(x.tag);const edit=el('button','edit-btn','편집');edit.setAttribute('aria-label',x.tag+' 편집');edit.onclick=()=>openEditor(x.id);row.append(name,edit);body.append(num,row,el('p','card-note',x.note||'메모를 추가해 보세요.'));if(x.labels.length){const chips=el('div','chips');x.labels.slice(0,3).forEach(label=>chips.append(el('span','chip',label)));body.append(chips);}card.append(wrap,body);$('grid').append(card);}
-$('empty').hidden=list.length>0;$('emptyTitle').textContent=q?'일치하는 태그가 없어요':onlyFavorites?'아직 즐겨찾기가 없어요':'첫 번째 취향을 기록해 보세요';$('emptyText').textContent=q?'다른 이름이나 메모로 검색해 보세요.':onlyFavorites?'카드의 하트를 눌러 좋아하는 태그를 모아 보세요.':'작가 태그와 이미지를 추가하면 여기에 차곡차곡 모여요.';$('emptyAction').textContent=q?'검색 지우기':onlyFavorites?'전체 모음 보기':'태그 추가하기';}
-function setTab(fav){onlyFavorites=fav;for(const [id,on]of [['allTab',!fav],['favTab',fav]]){$(id).classList.toggle('active',on);$(id).setAttribute('aria-pressed',String(on));}render();}
-function updatePreview(){$('uploadPreview').hidden=!draftImage;$('removeImage').hidden=!draftImage;if(draftImage)$('uploadPreview').src=draftImage;else $('uploadPreview').removeAttribute('src');}
-function openEditor(id=null){editing=id;const x=entries.find(e=>e.id===id);$('editorTitle').textContent=x?'태그 편집':'새로운 태그 추가';$('tagInput').value=x?.tag||'';$('labelsInput').value=x?.labels.join(', ')||'';$('noteInput').value=x?.note||'';draftImage=x?.image||'';$('imageInput').value='';$('formError').textContent='';$('deleteBtn').hidden=!x;updatePreview();$('editor').showModal();}
-async function readImage(file){if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw Error('JPG, PNG, WebP 이미지를 선택해 주세요.');if(file.size>10*1024*1024)throw Error('10MB 이하의 이미지를 선택해 주세요.');const url=URL.createObjectURL(file);try{const img=new Image();img.src=url;await img.decode();const scale=Math.min(1,1200/Math.max(img.width,img.height));const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(img.width*scale));canvas.height=Math.max(1,Math.round(img.height*scale));const ctx=canvas.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(img,0,0,canvas.width,canvas.height);return canvas.toDataURL('image/jpeg',.82);}finally{URL.revokeObjectURL(url);}}
-$('imageInput').onchange=async()=>{const file=$('imageInput').files[0];if(!file)return;imagePending=true;$('saveBtn').disabled=true;$('formError').textContent='';try{draftImage=await readImage(file);updatePreview();}catch(e){$('formError').textContent=e.message||'이미지를 읽지 못했어요.';}finally{imagePending=false;$('saveBtn').disabled=false;}};
-$('removeImage').onclick=()=>{draftImage='';$('imageInput').value='';updatePreview();};
-$('editForm').onsubmit=e=>{e.preventDefault();if(imagePending)return;const tag=$('tagInput').value.trim();if(!tag){$('formError').textContent='작가 태그를 입력해 주세요.';return;}if(entries.some(x=>x.id!==editing&&x.tag.toLocaleLowerCase()===tag.toLocaleLowerCase())){$('formError').textContent='같은 태그가 이미 있어요. 기존 카드를 편집해 주세요.';return;}const old=entries.find(x=>x.id===editing);const x={id:editing||crypto.randomUUID(),tag,labels:[...new Set($('labelsInput').value.split(',').map(v=>v.trim()).filter(Boolean))].slice(0,20),note:$('noteInput').value.trim(),image:draftImage,favorite:old?.favorite||false,sample:false,created:old?.created||Date.now()};const next=old?entries.map(v=>v.id===editing?x:v):[x,...entries];if(commit(next)){$('editor').close();toast(old?'변경 내용을 저장했어요.':'새로운 태그를 추가했어요.');}};
-$('deleteBtn').onclick=()=>{if(confirm('이 태그를 삭제할까요? 삭제 전에 백업해 둘 수 있어요.')){if(commit(entries.filter(e=>e.id!==editing))){$('editor').close();toast('태그를 삭제했어요.');}}};
-async function copy(tag){try{await navigator.clipboard.writeText(tag);toast(tag+' · 복사했어요');}catch{$('copyText').value=tag;$('copyDialog').showModal();$('copyText').focus();$('copyText').select();}}
-function openViewer(id){const x=entries.find(e=>e.id===id);if(!x)return;viewId=id;$('viewTitle').textContent=x.tag;$('viewImage').replaceChildren(imageContent(x,entries.indexOf(x)));$('viewNote').textContent=x.note||'아직 메모가 없어요.';$('viewer').showModal();}
-$('viewCopy').onclick=()=>{const x=entries.find(e=>e.id===viewId);if(x)copy(x.tag);};$('viewEdit').onclick=()=>{$('viewer').close();openEditor(viewId);};
-document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>$(b.dataset.close).close());
-document.querySelectorAll('dialog').forEach(d=>d.addEventListener('click',e=>{if(e.target===d){const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)d.close();}}));
-$('allTab').onclick=()=>setTab(false);$('favTab').onclick=()=>setTab(true);$('search').oninput=render;$('sort').onchange=render;$('addBtn').onclick=()=>openEditor();$('helpBtn').onclick=()=>$('help').showModal();$('emptyAction').onclick=()=>{if($('search').value){$('search').value='';render();}else if(onlyFavorites)setTab(false);else openEditor();};
-document.addEventListener('keydown',e=>{if(e.key==='/'&&!document.querySelector('dialog[open]')&&!['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)){e.preventDefault();$('search').focus();}});
-$('exportBtn').onclick=()=>{const data={version:1,exportedAt:new Date().toISOString(),entries};const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=el('a');a.href=url;a.download='artist-notes-'+new Date().toISOString().slice(0,10)+'.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('백업 파일을 내려받았어요.');};
-$('importBtn').onclick=()=>$('importFile').click();$('importFile').onchange=async()=>{const file=$('importFile').files[0];if(!file)return;try{if(file.size>30*1024*1024)throw Error('30MB 이하의 백업 파일을 선택해 주세요.');const incoming=validate(JSON.parse(await file.text()));const known=new Set(entries.map(x=>x.tag.toLocaleLowerCase()));const added=[];for(const x of incoming){const key=x.tag.toLocaleLowerCase();if(!known.has(key)){added.push({...x,id:crypto.randomUUID()});known.add(key);}}if(commit([...added,...entries]))toast(added.length+'개를 가져왔어요. 중복 태그는 건너뛰었어요.');}catch(e){toast(e instanceof SyntaxError?'JSON 백업 파일을 확인해 주세요.':e.message||'백업을 읽지 못했어요.');}finally{$('importFile').value='';}};
-render();
+const OLD_KEY = 'artist-notes-v1';            // 예전 버전이 브라우저에 저장하던 데이터
+const CFG_KEY = 'artist-notes-github';        // 이 기기의 GitHub 연결 설정
+const FAV_KEY = 'artist-notes-editor-favorites';
+const DATA_PATH = 'collection.json';
+const IMAGE_PATH = /^images\/[A-Za-z0-9_-]+\.(jpg|png|webp)$/;
+const DATA_IMAGE = /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/;
 
-$('publishFile').onclick = () => {
-  const publicEntries = entries.filter((entry) => !entry.sample).map(({ tag, labels, note, image, created }) => ({
-    tag, labels, note, image, created,
-  }));
-  if (!publicEntries.length) {
-    toast('공개할 태그를 먼저 추가하거나 예시 태그를 편집해 주세요.');
-    return;
+let entries = [], onlyFavorites = false, editing = null, draftImage = '', imagePending = false, viewId = null, toastTimer;
+let busy = false, loaded = false, loadedHead = null;
+const imageCache = new Map(); // 이번 세션에 올린 이미지: 경로 → data URL (Pages 반영 전에도 보이도록)
+
+let favorites = new Set();
+try { const f = JSON.parse(localStorage.getItem(FAV_KEY) || '[]'); if (Array.isArray(f)) favorites = new Set(f); } catch {}
+let cfg = { token: '', repo: 'akise4455/artist-notes', branch: 'main' };
+try { Object.assign(cfg, JSON.parse(localStorage.getItem(CFG_KEY) || '{}')); } catch {}
+
+const keyOf = x => x.tag.toLocaleLowerCase();
+const newId = () => crypto.randomUUID().replace(/-/g, '').slice(0, 16);
+function saveFavorites() { try { localStorage.setItem(FAV_KEY, JSON.stringify([...favorites])); } catch {} }
+
+function validate(data) {
+  const list = Array.isArray(data) ? data : data?.entries;
+  if (!Array.isArray(list) || list.length > 5000) throw Error('올바른 목록 파일이 아니에요.');
+  const ids = new Set();
+  return list.map((x, i) => {
+    if (!x || typeof x.tag !== 'string' || !x.tag.trim() || x.tag.length > 150) throw Error('태그 형식을 확인해 주세요.');
+    let id = typeof x.id === 'string' && /^[\w-]{1,64}$/.test(x.id) ? x.id : newId();
+    if (ids.has(id)) id = newId();
+    ids.add(id);
+    let image = '';
+    if (typeof x.image === 'string' && x.image) {
+      if (IMAGE_PATH.test(x.image) || (x.image.length <= 14000000 && DATA_IMAGE.test(x.image))) image = x.image;
+      else throw Error('이미지 형식을 확인해 주세요.');
+    }
+    const tag = x.tag.trim();
+    if (x.favorite === true) { favorites.add(tag.toLocaleLowerCase()); saveFavorites(); }
+    return {
+      id, tag,
+      labels: Array.isArray(x.labels) ? x.labels.filter(v => typeof v === 'string').slice(0, 20).map(v => v.slice(0, 50)) : [],
+      note: typeof x.note === 'string' ? x.note.slice(0, 1500) : '',
+      image, sample: x.sample === true,
+      created: Number.isFinite(x.created) ? x.created : Date.now() - i,
+    };
+  });
+}
+
+/* ---------- GitHub ---------- */
+function ghMessage(status, msg) {
+  if (status === 401) return '토큰이 올바르지 않거나 만료됐어요. GitHub 연결 설정을 확인해 주세요.';
+  if (status === 403 || status === 404) return '저장소에 쓸 수 없어요. 토큰 권한(Contents: Read and write)과 저장소 이름을 확인해 주세요.';
+  if (status === 409 || status === 422) return '다른 곳에서 먼저 저장된 내용이 있어요. 새로고침한 뒤 다시 저장해 주세요.';
+  return 'GitHub 오류(' + status + ')' + (msg ? ': ' + msg : '');
+}
+async function gh(path, { method = 'GET', body, raw = false } = {}) {
+  let r;
+  try {
+    r = await fetch('https://api.github.com/repos/' + cfg.repo + path, {
+      method, cache: 'no-store',
+      headers: {
+        Accept: raw ? 'application/vnd.github.raw+json' : 'application/vnd.github+json',
+        Authorization: 'Bearer ' + cfg.token,
+        'X-GitHub-Api-Version': '2022-11-28',
+        ...(body ? { 'Content-Type': 'application/json' } : {}),
+      },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+  } catch { throw Error('GitHub에 연결하지 못했어요. 인터넷 연결을 확인해 주세요.'); }
+  if (!r.ok) { let msg = ''; try { msg = (await r.json()).message; } catch {} const e = Error(ghMessage(r.status, msg)); e.status = r.status; throw e; }
+  return raw ? r.text() : r.json();
+}
+
+function imageSrc(path) {
+  if (!IMAGE_PATH.test(path)) return path;
+  return imageCache.get(path) || path;
+}
+function rawUrl(path) { return 'https://raw.githubusercontent.com/' + cfg.repo + '/' + (loadedHead || cfg.branch) + '/' + path; }
+
+async function load() {
+  loaded = false; setSync('목록을 불러오는 중…'); render();
+  try {
+    let text;
+    if (cfg.token) {
+      const ref = await gh('/git/ref/heads/' + encodeURIComponent(cfg.branch));
+      loadedHead = ref.object.sha;
+      try { text = await gh('/contents/' + DATA_PATH + '?ref=' + loadedHead, { raw: true }); }
+      catch (e) { if (e.status === 404) text = '{"entries":[]}'; else throw e; }
+    } else {
+      loadedHead = null;
+      const r = await fetch('./' + DATA_PATH, { cache: 'no-cache' });
+      text = r.status === 404 ? '{"entries":[]}' : r.ok ? await r.text() : null;
+      if (text === null) throw Error('목록을 불러오지 못했어요.');
+    }
+    entries = validate(JSON.parse(text)).filter(x => !x.sample);
+    loaded = true;
+    updateSync();
+  } catch (e) {
+    entries = [];
+    setSync((e.message || '목록을 불러오지 못했어요.') + ' 새로고침하거나 연결 설정을 확인해 주세요.');
   }
-  const url = URL.createObjectURL(new Blob([JSON.stringify({ entries: publicEntries }, null, 2)], { type: 'application/json' }));
-  const link = el('a');
-  link.href = url;
-  link.download = 'collection.json';
-  document.body.append(link);
-  link.click();
-  link.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-  toast('collection.json을 GitHub에 올리면 목록이 공개됩니다.');
+  render();
+  checkLegacy();
+}
+
+/* 목록을 저장소에 커밋. data: 이미지는 images/ 파일로 바꾸고, 더 이상 쓰지 않는 이미지 파일은 지운다. */
+async function commit(next, message) {
+  if (busy) return false;
+  if (!cfg.token) { openSettings('저장하려면 먼저 GitHub를 연결해 주세요.'); return false; }
+  if (!loaded) { toast('목록을 불러온 뒤에 저장할 수 있어요.'); return false; }
+  setBusy(true);
+  const before = $('syncText').textContent;
+  try {
+    setSync('저장 중…');
+    const head = (await gh('/git/ref/heads/' + encodeURIComponent(cfg.branch))).object.sha;
+    if (loadedHead && head !== loadedHead) {
+      const cmp = await gh('/compare/' + loadedHead + '...' + head);
+      if (cmp.status !== 'ahead' || (cmp.files || []).some(f => f.filename === DATA_PATH || f.filename.startsWith('images/')))
+        throw Error('다른 기기에서 먼저 저장한 내용이 있어요. 새로고침한 뒤 다시 저장해 주세요.');
+    }
+    const headCommit = await gh('/git/commits/' + head);
+    const tree = await gh('/git/trees/' + headCommit.tree.sha + '?recursive=1');
+    const existing = new Set(tree.tree.filter(t => t.type === 'blob').map(t => t.path));
+    const items = [], out = [];
+    const toUpload = next.filter(x => DATA_IMAGE.test(x.image)).length;
+    let uploaded = 0;
+    for (const x of next) {
+      let image = x.image;
+      if (DATA_IMAGE.test(image)) {
+        setSync('이미지 올리는 중… ' + (++uploaded) + '/' + toUpload);
+        const [, mime, b64] = image.match(/^data:image\/(\w+);base64,(.*)$/);
+        const path = 'images/' + newId() + '.' + (mime === 'jpeg' ? 'jpg' : mime);
+        const blob = await gh('/git/blobs', { method: 'POST', body: { content: b64, encoding: 'base64' } });
+        items.push({ path, mode: '100644', type: 'blob', sha: blob.sha });
+        imageCache.set(path, image);
+        image = path;
+      }
+      out.push({ ...x, image });
+    }
+    const used = new Set(out.map(x => x.image).filter(Boolean));
+    for (const p of existing) if (p.startsWith('images/') && !used.has(p)) items.push({ path: p, mode: '100644', type: 'blob', sha: null });
+    const data = { version: 2, entries: out.map(({ id, tag, labels, note, image, created }) => ({ id, tag, labels, note, image, created })) };
+    items.push({ path: DATA_PATH, mode: '100644', type: 'blob', content: JSON.stringify(data, null, 2) + '\n' });
+    setSync('커밋하는 중…');
+    const newTree = await gh('/git/trees', { method: 'POST', body: { base_tree: headCommit.tree.sha, tree: items } });
+    const c = await gh('/git/commits', { method: 'POST', body: { message, tree: newTree.sha, parents: [head] } });
+    await gh('/git/refs/heads/' + encodeURIComponent(cfg.branch), { method: 'PATCH', body: { sha: c.sha } });
+    loadedHead = c.sha;
+    entries = out;
+    render();
+    setSync('저장했어요. 공개 갤러리에는 1분쯤 뒤 반영돼요.');
+    return true;
+  } catch (e) {
+    setSync(before);
+    toast(e.message || '저장하지 못했어요.');
+    return false;
+  } finally { setBusy(false); }
+}
+
+function setBusy(on) {
+  busy = on;
+  for (const id of ['saveBtn', 'deleteBtn', 'importBtn', 'migrateBtn', 'exportBtn']) $(id).disabled = on;
+  $('saveBtn').textContent = on ? '저장 중…' : '저장하기';
+}
+function setSync(text) { $('syncText').textContent = text; }
+function updateSync() {
+  $('repoLink').href = 'https://github.com/' + cfg.repo;
+  if (!cfg.token) setSync('이 기기는 아직 GitHub에 연결되지 않았어요. 보기만 할 수 있어요. 연결하면 저장할 때마다 저장소에 바로 커밋돼요.');
+  else setSync(cfg.repo + ' (' + cfg.branch + ')에 연결됐어요. 저장하면 바로 커밋되고 공개 갤러리에는 1분쯤 뒤 반영돼요.');
+}
+
+/* ---------- 예전 브라우저 데이터 옮기기 ---------- */
+function readLegacy() {
+  try { const raw = localStorage.getItem(OLD_KEY); if (!raw) return []; return validate(JSON.parse(raw)).filter(x => !x.sample); } catch { return []; }
+}
+function checkLegacy() {
+  const known = new Set(entries.map(keyOf));
+  const extra = readLegacy().filter(x => !known.has(keyOf(x)));
+  $('migrateBtn').hidden = !(loaded && extra.length);
+  $('migrateBtn').textContent = '이 브라우저 데이터 ' + extra.length + '개 합치기';
+}
+$('migrateBtn').onclick = async () => {
+  const known = new Set(entries.map(keyOf));
+  const added = [];
+  for (const x of readLegacy()) if (!known.has(keyOf(x))) { added.push({ ...x, id: newId() }); known.add(keyOf(x)); }
+  if (!added.length) { checkLegacy(); return; }
+  if (!confirm('이 브라우저에만 있던 태그 ' + added.length + '개를 저장소에 추가할까요? 같은 태그는 건너뛰어요.')) return;
+  if (await commit([...added, ...entries], '이 브라우저 데이터 ' + added.length + '개 합치기')) {
+    try { localStorage.removeItem(OLD_KEY); } catch {}
+    checkLegacy();
+    toast(added.length + '개를 저장소로 옮겼어요.');
+  }
 };
+
+/* ---------- 연결 설정 ---------- */
+function openSettings(message) {
+  $('settingsMsg').textContent = message || '저장하려면 이 저장소에 쓸 수 있는 토큰이 필요해요. 토큰은 이 기기 브라우저에만 저장돼요.';
+  $('repoInput').value = cfg.repo; $('branchInput').value = cfg.branch; $('tokenInput').value = cfg.token;
+  $('settingsError').textContent = ''; $('disconnectBtn').hidden = !cfg.token;
+  $('settings').showModal();
+}
+$('settingsBtn').onclick = () => openSettings();
+$('settingsForm').onsubmit = async e => {
+  e.preventDefault();
+  const next = { repo: $('repoInput').value.trim(), branch: $('branchInput').value.trim() || 'main', token: $('tokenInput').value.trim() };
+  if (!next.token) { $('settingsError').textContent = '토큰을 입력해 주세요.'; return; }
+  $('settingsSave').disabled = true; $('settingsError').textContent = '';
+  const prev = cfg; cfg = { ...cfg, ...next };
+  try {
+    const repo = await gh('');
+    if (!repo.permissions?.push) throw Error('이 토큰으로는 저장소에 쓸 수 없어요. Contents 권한을 Read and write로 바꿔 주세요.');
+    await gh('/git/ref/heads/' + encodeURIComponent(cfg.branch));
+    try { localStorage.setItem(CFG_KEY, JSON.stringify(cfg)); } catch { throw Error('이 브라우저에 설정을 저장할 수 없어요.'); }
+    $('settings').close();
+    toast('GitHub에 연결했어요.');
+    load();
+  } catch (err) {
+    cfg = prev;
+    $('settingsError').textContent = err.status === 404 ? '저장소나 브랜치를 찾을 수 없어요. 이름과 토큰 권한을 확인해 주세요.' : err.message;
+  } finally { $('settingsSave').disabled = false; }
+};
+$('disconnectBtn').onclick = () => {
+  if (!confirm('이 기기에서 GitHub 연결을 해제할까요? 저장소의 데이터는 그대로 남아요.')) return;
+  cfg = { ...cfg, token: '' };
+  try { localStorage.setItem(CFG_KEY, JSON.stringify(cfg)); } catch {}
+  $('settings').close();
+  load();
+};
+
+/* ---------- 화면 ---------- */
+function toast(message) { $('toast').textContent = message; $('toast').classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => $('toast').classList.remove('show'), 3200); }
+function el(tag, cls, text) { const n = document.createElement(tag); if (cls) n.className = cls; if (text !== undefined) n.textContent = text; return n; }
+function placeholder(index) { const n = el('div', 'placeholder tone-' + (index % 6)); n.append(el('span', 'big', String(index + 1).padStart(2, '0')), el('span', 'line'), el('span', 'caption', 'YOUR NEXT INSPIRATION'), el('small', '', '비교 이미지를 채워 주세요')); return n; }
+function imageContent(entry, index) {
+  if (!entry.image) return placeholder(index);
+  const img = el('img');
+  img.src = imageSrc(entry.image);
+  if (IMAGE_PATH.test(entry.image)) img.onerror = () => { img.onerror = null; img.src = rawUrl(entry.image); };
+  img.alt = entry.tag + ' 비교 이미지'; img.loading = 'lazy';
+  return img;
+}
+function render() {
+  const q = $('search').value.trim().toLocaleLowerCase();
+  const isFav = x => favorites.has(keyOf(x));
+  let list = entries.filter(x => (!onlyFavorites || isFav(x)) && [x.tag, ...x.labels, x.note].join(' ').toLocaleLowerCase().includes(q));
+  const sort = $('sort').value;
+  list.sort(sort === 'name' ? (a, b) => a.tag.localeCompare(b.tag) : sort === 'old' ? (a, b) => a.created - b.created : (a, b) => b.created - a.created);
+  $('allCount').textContent = entries.length; $('favCount').textContent = entries.filter(isFav).length;
+  $('resultCount').replaceChildren(document.createTextNode(q ? '검색 결과 ' : onlyFavorites ? '즐겨찾기 ' : '총 '), el('strong', '', String(list.length)), document.createTextNode(' 개'));
+  $('grid').replaceChildren();
+  for (const x of list) {
+    const index = entries.findIndex(e => e.id === x.id);
+    const card = el('article', 'card'); const wrap = el('div', 'image-wrap');
+    const imageBtn = el('button', 'image-btn'); imageBtn.setAttribute('aria-label', x.tag + ' 크게 보기'); imageBtn.append(imageContent(x, index)); imageBtn.onclick = () => openViewer(x.id);
+    const fav = el('button', 'fav' + (isFav(x) ? ' selected' : ''), isFav(x) ? '♥' : '♡');
+    fav.setAttribute('aria-label', x.tag + ' 즐겨찾기'); fav.setAttribute('aria-pressed', String(isFav(x)));
+    fav.onclick = () => { const k = keyOf(x); favorites.has(k) ? favorites.delete(k) : favorites.add(k); saveFavorites(); render(); };
+    wrap.append(imageBtn, fav);
+    const body = el('div', 'card-body'); const num = el('div', 'card-number', 'NO. ' + String(index + 1).padStart(3, '0'));
+    const row = el('div', 'name-row'); const name = el('button', 'tag-name'); name.title = x.tag + ' 복사'; name.setAttribute('aria-label', x.tag + ' 태그 복사'); name.append(el('span', '', x.tag));
+    name.insertAdjacentHTML('beforeend', '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5" y="5" width="8" height="9" rx="1.5"/><path d="M10 3V2H2v9h1"/></svg>'); name.onclick = () => copy(x.tag);
+    const edit = el('button', 'edit-btn', '편집'); edit.setAttribute('aria-label', x.tag + ' 편집'); edit.onclick = () => openEditor(x.id);
+    row.append(name, edit); body.append(num, row, el('p', 'card-note', x.note || '메모를 추가해 보세요.'));
+    if (x.labels.length) { const chips = el('div', 'chips'); x.labels.slice(0, 3).forEach(label => chips.append(el('span', 'chip', label))); body.append(chips); }
+    card.append(wrap, body); $('grid').append(card);
+  }
+  $('empty').hidden = list.length > 0 || !loaded;
+  $('emptyTitle').textContent = q ? '일치하는 태그가 없어요' : onlyFavorites ? '아직 즐겨찾기가 없어요' : '첫 번째 취향을 기록해 보세요';
+  $('emptyText').textContent = q ? '다른 이름이나 메모로 검색해 보세요.' : onlyFavorites ? '카드의 하트를 눌러 좋아하는 태그를 모아 보세요.' : '작가 태그와 이미지를 추가하면 여기에 차곡차곡 모여요.';
+  $('emptyAction').textContent = q ? '검색 지우기' : onlyFavorites ? '전체 모음 보기' : '태그 추가하기';
+}
+function setTab(fav) { onlyFavorites = fav; for (const [id, on] of [['allTab', !fav], ['favTab', fav]]) { $(id).classList.toggle('active', on); $(id).setAttribute('aria-pressed', String(on)); } render(); }
+function updatePreview() { $('uploadPreview').hidden = !draftImage; $('removeImage').hidden = !draftImage; if (draftImage) $('uploadPreview').src = imageSrc(draftImage); else $('uploadPreview').removeAttribute('src'); }
+function openEditor(id = null) {
+  if (!cfg.token) { openSettings('태그를 추가하거나 고치려면 먼저 GitHub를 연결해 주세요.'); return; }
+  editing = id; const x = entries.find(e => e.id === id);
+  $('editorTitle').textContent = x ? '태그 편집' : '새로운 태그 추가';
+  $('tagInput').value = x?.tag || ''; $('labelsInput').value = x?.labels.join(', ') || ''; $('noteInput').value = x?.note || '';
+  draftImage = x?.image || ''; $('imageInput').value = ''; $('formError').textContent = ''; $('deleteBtn').hidden = !x;
+  updatePreview(); $('editor').showModal();
+}
+async function readImage(file) {
+  if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) throw Error('JPG, PNG, WebP 이미지를 선택해 주세요.');
+  if (file.size > 10 * 1024 * 1024) throw Error('10MB 이하의 이미지를 선택해 주세요.');
+  const url = URL.createObjectURL(file);
+  try {
+    const img = new Image(); img.src = url; await img.decode();
+    const scale = Math.min(1, 1200 / Math.max(img.width, img.height));
+    const canvas = document.createElement('canvas'); canvas.width = Math.max(1, Math.round(img.width * scale)); canvas.height = Math.max(1, Math.round(img.height * scale));
+    const ctx = canvas.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, canvas.width, canvas.height); ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    return canvas.toDataURL('image/jpeg', .82);
+  } finally { URL.revokeObjectURL(url); }
+}
+$('imageInput').onchange = async () => { const file = $('imageInput').files[0]; if (!file) return; imagePending = true; $('saveBtn').disabled = true; $('formError').textContent = ''; try { draftImage = await readImage(file); updatePreview(); } catch (e) { $('formError').textContent = e.message || '이미지를 읽지 못했어요.'; } finally { imagePending = false; $('saveBtn').disabled = busy; } };
+$('removeImage').onclick = () => { draftImage = ''; $('imageInput').value = ''; updatePreview(); };
+$('editForm').onsubmit = async e => {
+  e.preventDefault(); if (imagePending || busy) return;
+  const tag = $('tagInput').value.trim();
+  if (!tag) { $('formError').textContent = '작가 태그를 입력해 주세요.'; return; }
+  if (entries.some(x => x.id !== editing && x.tag.toLocaleLowerCase() === tag.toLocaleLowerCase())) { $('formError').textContent = '같은 태그가 이미 있어요. 기존 카드를 편집해 주세요.'; return; }
+  const old = entries.find(x => x.id === editing);
+  const x = { id: editing || newId(), tag, labels: [...new Set($('labelsInput').value.split(',').map(v => v.trim()).filter(Boolean))].slice(0, 20), note: $('noteInput').value.trim(), image: draftImage, sample: false, created: old?.created || Date.now() };
+  if (old && favorites.has(keyOf(old)) && keyOf(old) !== keyOf(x)) { favorites.delete(keyOf(old)); favorites.add(keyOf(x)); saveFavorites(); }
+  const next = old ? entries.map(v => v.id === editing ? x : v) : [x, ...entries];
+  if (await commit(next, (old ? '태그 편집: ' : '태그 추가: ') + tag)) { $('editor').close(); toast(old ? '변경 내용을 저장했어요.' : '새로운 태그를 추가했어요.'); }
+};
+$('deleteBtn').onclick = async () => {
+  const old = entries.find(e => e.id === editing);
+  if (!old || !confirm('이 태그를 삭제할까요? 저장소 기록에는 남아 있어 나중에 되살릴 수 있어요.')) return;
+  if (await commit(entries.filter(e => e.id !== editing), '태그 삭제: ' + old.tag)) { $('editor').close(); toast('태그를 삭제했어요.'); }
+};
+async function copy(tag) { try { await navigator.clipboard.writeText(tag); toast(tag + ' · 복사했어요'); } catch { $('copyText').value = tag; $('copyDialog').showModal(); $('copyText').focus(); $('copyText').select(); } }
+function openViewer(id) { const x = entries.find(e => e.id === id); if (!x) return; viewId = id; $('viewTitle').textContent = x.tag; $('viewImage').replaceChildren(imageContent(x, entries.indexOf(x))); $('viewNote').textContent = x.note || '아직 메모가 없어요.'; $('viewer').showModal(); }
+$('viewCopy').onclick = () => { const x = entries.find(e => e.id === viewId); if (x) copy(x.tag); };
+$('viewEdit').onclick = () => { $('viewer').close(); openEditor(viewId); };
+document.querySelectorAll('[data-close]').forEach(b => b.onclick = () => $(b.dataset.close).close());
+document.querySelectorAll('dialog').forEach(d => d.addEventListener('click', e => { if (e.target === d) { const r = d.getBoundingClientRect(); if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) d.close(); } }));
+$('allTab').onclick = () => setTab(false); $('favTab').onclick = () => setTab(true); $('search').oninput = render; $('sort').onchange = render; $('addBtn').onclick = () => openEditor(); $('helpBtn').onclick = () => $('help').showModal();
+$('emptyAction').onclick = () => { if ($('search').value) { $('search').value = ''; render(); } else if (onlyFavorites) setTab(false); else openEditor(); };
+document.addEventListener('keydown', e => { if (e.key === '/' && !document.querySelector('dialog[open]') && !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) { e.preventDefault(); $('search').focus(); } });
+
+/* ---------- 백업: 이미지까지 담은 파일 하나로 ---------- */
+async function toDataUrl(path) {
+  if (!IMAGE_PATH.test(path)) return path;
+  if (imageCache.has(path)) return imageCache.get(path);
+  for (const url of [path, rawUrl(path)]) {
+    try { const r = await fetch(url); if (!r.ok) continue; const b = await r.blob(); return await new Promise((ok, bad) => { const f = new FileReader(); f.onload = () => ok(f.result); f.onerror = bad; f.readAsDataURL(b); }); } catch {}
+  }
+  return '';
+}
+$('exportBtn').onclick = async () => {
+  if (busy) return; setBusy(true);
+  try {
+    const out = [];
+    for (const [i, x] of entries.entries()) { toast('백업 준비 중… ' + (i + 1) + '/' + entries.length); out.push({ ...x, image: x.image ? await toDataUrl(x.image) : '', favorite: favorites.has(keyOf(x)) }); }
+    const blob = new Blob([JSON.stringify({ version: 2, exportedAt: new Date().toISOString(), entries: out }, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob); const a = el('a'); a.href = url; a.download = 'artist-notes-' + new Date().toISOString().slice(0, 10) + '.json'; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+    toast('백업 파일을 내려받았어요.');
+  } finally { setBusy(false); }
+};
+$('importBtn').onclick = () => { if (!cfg.token) { openSettings('백업을 가져오려면 먼저 GitHub를 연결해 주세요.'); return; } $('importFile').click(); };
+$('importFile').onchange = async () => {
+  const file = $('importFile').files[0]; if (!file) return;
+  try {
+    if (file.size > 60 * 1024 * 1024) throw Error('60MB 이하의 백업 파일을 선택해 주세요.');
+    const incoming = validate(JSON.parse(await file.text())).filter(x => !x.sample);
+    const known = new Set(entries.map(keyOf)); const added = [];
+    for (const x of incoming) { const key = keyOf(x); if (!known.has(key)) { added.push({ ...x, id: newId() }); known.add(key); } }
+    if (!added.length) { toast('새로 추가할 태그가 없어요. 모두 이미 있는 태그예요.'); return; }
+    if (await commit([...added, ...entries], '백업 가져오기: ' + added.length + '개')) toast(added.length + '개를 가져왔어요. 중복 태그는 건너뛰었어요.');
+  } catch (e) { toast(e instanceof SyntaxError ? 'JSON 백업 파일을 확인해 주세요.' : e.message || '백업을 읽지 못했어요.'); }
+  finally { $('importFile').value = ''; }
+};
+
+updateSync();
+load();
 </script>
 </body></html>
