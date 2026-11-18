@@ -1,5 +1,8 @@
-import { put, list, del, BlobPreconditionFailedError } from '@vercel/blob';
+import { put, head, list, del, BlobPreconditionFailedError, BlobNotFoundError } from '@vercel/blob';
 import { COLLECTION, IMAGE_URL, guard, json } from './_lib.js';
+
+const plainEtag = (etag) => String(etag || '').replace(/^W\//, '').replace(/"/g, '');
+const sameEtag = (a, b) => !!plainEtag(a) && plainEtag(a) === plainEtag(b);
 
 function clean(entries) {
   if (!Array.isArray(entries) || entries.length > 5000) throw Error('목록 형식을 확인해 주세요.');
@@ -40,13 +43,19 @@ export async function POST(request) {
   catch (error) { return json({ error: error.message || '잘못된 요청이에요.' }, 400); }
   const text = JSON.stringify({ version: 3, updatedAt: new Date().toISOString(), entries }, null, 1);
   const options = { access: 'public', addRandomSuffix: false, contentType: 'application/json; charset=utf-8', cacheControlMaxAge: 60 };
-  if (typeof body.etag === 'string' && body.etag) options.ifMatch = body.etag;
-  else options.allowOverwrite = false;
+  const conflict = () => json({ error: '다른 기기에서 먼저 저장한 내용이 있어요. 새로고침한 뒤 다시 저장해 주세요.', conflict: true }, 409);
+  // 지금 저장된 목록의 버전을 서버에서 직접 확인한다. (읽을 때 받은 버전은 W/"…" 처럼 모양이 다를 수 있어서 모양을 맞춰 비교)
+  let current = null;
+  try { current = await head(COLLECTION); }
+  catch (error) { if (!(error instanceof BlobNotFoundError)) { console.error('head failed', error); return json({ error: '저장하지 못했어요. (' + (error?.message || error) + ')' }, 500); } }
+  if (current) {
+    if (sameEtag(body.etag, current.etag)) options.ifMatch = current.etag;
+    else return conflict();
+  } else options.allowOverwrite = false;
   let blob;
   try { blob = await put(COLLECTION, text, options); }
   catch (error) {
-    if (error instanceof BlobPreconditionFailedError || /exist|precondition/i.test(error?.message || ''))
-      return json({ error: '다른 기기에서 먼저 저장한 내용이 있어요. 새로고침한 뒤 다시 저장해 주세요.', conflict: true }, 409);
+    if (error instanceof BlobPreconditionFailedError || /exist|precondition/i.test(error?.message || '')) return conflict();
     console.error('save failed', error);
     return json({ error: '저장하지 못했어요. (' + (error?.message || error) + ')' }, 500);
   }
