@@ -39,6 +39,11 @@ body { font-family: 'Noto Sans KR', system-ui, sans-serif; }
 select { color: #37434e; border-radius: 8px; }
 .collection-heading { margin: 16px 0 0; border-bottom: 1px solid var(--border); }
 .tabs { gap: 22px; }
+.category-tabs { display: flex; gap: 8px; margin: 0 0 14px; }
+.cat { background: #fff; border: 1px solid var(--border); border-radius: 999px; padding: 8px 18px; font-size: 14px; font-weight: 600; color: var(--muted); }
+.cat span { margin-left: 6px; font-size: 12px; font-weight: 500; opacity: .8; }
+.cat.active { background: var(--purple); border-color: var(--purple); color: #fff; }
+.field select { display: block; width: 100%; height: 42px; margin: 8px 0 5px; }
 .tab { font-size: 14px; color: var(--muted); padding: 12px 0; }
 .tab.active { color: var(--ink); }
 .tab.active::after { background: var(--purple); bottom: -1px; }
@@ -130,6 +135,7 @@ footer { padding: 16px 0 24px; }
   <header class="gallery-header"><div><h1>작태 노트</h1><p>작가 태그를 찾고, 이름을 눌러 복사하세요.</p></div></header>
   <main>
     <section class="collection" aria-label="작가 태그 모음">
+      <div class="category-tabs" role="group" aria-label="캐릭터 분류"><button class="cat active" data-cat="female" aria-pressed="true">여캐 <span id="cnt-female">0</span></button><button class="cat" data-cat="male" aria-pressed="false">남캐 <span id="cnt-male">0</span></button></div>
       <div class="search-row"><label class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><input type="search" id="search" placeholder="작가 이름, 태그, 메모로 찾아보세요" aria-label="작가 이름, 태그, 메모 검색"></label><select id="sort" aria-label="정렬"><option value="new">최근 추가순</option><option value="name">이름순 A–Z</option><option value="old">오래된순</option></select></div>
 <div class="collection-heading"><div class="tabs" role="group" aria-label="보기 선택"><button class="tab active" id="allTab" aria-pressed="true">전체 모음 <span id="allCount">0</span></button><button class="tab" id="favTab" aria-pressed="false">♡ 즐겨찾기 <span id="favCount">0</span></button></div></div>
       <div class="result-row"><p id="resultCount" aria-live="polite"></p></div>
@@ -151,6 +157,10 @@ let currentPage = 1;
 let entries = [];
 let favorites = new Set();
 let filterFavorites = false;
+let category = 'female';
+try { if (localStorage.getItem('artist-notes-public-category') === 'male') category = 'male'; } catch { /* 기본은 여캐 */ }
+if (location.hash === '#male') category = 'male';
+if (location.hash === '#female') category = 'female';
 let loadState = 'loading';
 let viewedEntry;
 let toastTimer;
@@ -173,7 +183,8 @@ function parseEntries(data) {
   return data.entries.flatMap((entry, index) => {
     if (typeof entry?.tag !== 'string' || !entry.tag.trim()) return [];
     const tag = entry.tag.trim();
-    const key = tag.toLowerCase();
+    const cat = entry.category === 'male' ? 'male' : 'female';
+    const key = (cat === 'male' ? 'male:' : '') + tag.toLowerCase();
     if (seen.has(key)) return [];
     seen.add(key);
     const labels = Array.isArray(entry.labels) ? entry.labels.filter((label) => typeof label === 'string') : [];
@@ -182,7 +193,7 @@ function parseEntries(data) {
     const imageFile = /^https:\/\/[a-z0-9-]+\.public\.blob\.vercel-storage\.com\/images\/[A-Za-z0-9_-]+\.(jpg|png|webp)$/;
     const image = typeof entry.image === 'string' && (imageFile.test(entry.image) || safeImage.test(entry.image)) ? entry.image : '';
     const created = Number.isFinite(entry.created) ? entry.created : -index;
-    return [{ tag, key, labels, note, image, created, index, sample: entry.sample === true }];
+    return [{ tag, key, category: cat, labels, note, image, created, index, sample: entry.sample === true }];
   });
 }
 
@@ -270,15 +281,22 @@ function renderCard(entry) {
 
 function render() {
   const query = element('search').value.trim().toLowerCase();
-  const list = entries.filter((entry) => (!filterFavorites || favorites.has(entry.key)) &&
+  const inCategory = entries.filter((entry) => entry.category === category);
+  const list = inCategory.filter((entry) => (!filterFavorites || favorites.has(entry.key)) &&
     [entry.tag, ...entry.labels, entry.note].join(' ').toLowerCase().includes(query));
   const sort = element('sort').value;
   if (sort === 'name') list.sort((a, b) => a.tag.localeCompare(b.tag));
   else if (sort === 'old') list.sort((a, b) => a.created - b.created);
   else list.sort((a, b) => b.created - a.created);
 
-  element('allCount').textContent = entries.length;
-  element('favCount').textContent = entries.filter((entry) => favorites.has(entry.key)).length;
+  element('allCount').textContent = inCategory.length;
+  element('favCount').textContent = inCategory.filter((entry) => favorites.has(entry.key)).length;
+  for (const button of document.querySelectorAll('.cat')) {
+    const active = button.dataset.cat === category;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-pressed', String(active));
+    button.querySelector('span').textContent = entries.filter((entry) => entry.category === button.dataset.cat).length;
+  }
   element('resultCount').textContent = loadState === 'ready' ? `${query ? '검색 결과' : '총'} ${list.length}개` : '';
   const pageCount = Math.max(1, Math.ceil(list.length / pageSize));
   currentPage = Math.min(currentPage, pageCount);
@@ -317,6 +335,14 @@ function selectTab(showFavorites) {
   }
   resetPage();
 }
+
+function selectCategory(next) {
+  category = next === 'male' ? 'male' : 'female';
+  try { localStorage.setItem('artist-notes-public-category', category); } catch { /* 저장 못 해도 보기는 된다 */ }
+  history.replaceState(null, '', '#' + category);
+  resetPage();
+}
+document.querySelectorAll('.cat').forEach((button) => { button.onclick = () => selectCategory(button.dataset.cat); });
 
 function resetPage() {
   currentPage = 1;

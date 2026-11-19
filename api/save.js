@@ -12,6 +12,7 @@ function clean(entries) {
     return {
       id: typeof x.id === 'string' ? x.id.slice(0, 64) : '',
       tag: x.tag.trim(),
+      category: x.category === 'male' ? 'male' : 'female',
       labels: Array.isArray(x.labels) ? x.labels.filter((v) => typeof v === 'string').slice(0, 20).map((v) => v.slice(0, 50)) : [],
       note: typeof x.note === 'string' ? x.note.slice(0, 1500) : '',
       image: x.image || '',

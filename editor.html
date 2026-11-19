@@ -39,6 +39,11 @@ body { font-family: 'Noto Sans KR', system-ui, sans-serif; }
 select { color: #37434e; border-radius: 8px; }
 .collection-heading { margin: 16px 0 0; border-bottom: 1px solid var(--border); }
 .tabs { gap: 22px; }
+.category-tabs { display: flex; gap: 8px; margin: 0 0 14px; }
+.cat { background: #fff; border: 1px solid var(--border); border-radius: 999px; padding: 8px 18px; font-size: 14px; font-weight: 600; color: var(--muted); }
+.cat span { margin-left: 6px; font-size: 12px; font-weight: 500; opacity: .8; }
+.cat.active { background: var(--purple); border-color: var(--purple); color: #fff; }
+.field select { display: block; width: 100%; height: 42px; margin: 8px 0 5px; }
 .tab { font-size: 14px; color: var(--muted); padding: 12px 0; }
 .tab.active { color: var(--ink); }
 .tab.active::after { background: var(--purple); bottom: -1px; }
@@ -129,6 +134,7 @@ footer { padding: 16px 0 24px; }
   <header class="gallery-header"><div><h1>목록 편집</h1><p>공개할 작가 태그와 비교 이미지를 정리하세요.</p></div><a class="gallery-link" href="./">공개 갤러리 ↗</a></header>
   <main>
     <section class="collection" aria-label="작가 태그 모음">
+      <div class="category-tabs" role="group" aria-label="캐릭터 분류"><button class="cat active" data-cat="female" aria-pressed="true">여캐 <span id="cnt-female">0</span></button><button class="cat" data-cat="male" aria-pressed="false">남캐 <span id="cnt-male">0</span></button></div>
       <div class="search-row"><label class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><input type="search" id="search" placeholder="작가 이름, 태그, 메모로 찾아보세요" aria-label="작가 이름, 태그, 메모 검색"></label><select id="sort" aria-label="정렬"><option value="new">최근 추가순</option><option value="name">이름순 A–Z</option><option value="old">오래된순</option></select></div>
 <div class="collection-heading"><div class="tabs" role="group" aria-label="보기 선택"><button class="tab active" id="allTab" aria-pressed="true">전체 모음 <span id="allCount">0</span></button><button class="tab" id="favTab" aria-pressed="false">♡ 즐겨찾기 <span id="favCount">0</span></button></div><div class="add-actions"><button class="secondary" id="bulkBtn">이미지로 한꺼번에 추가</button><button class="primary" id="addBtn"><span>＋</span> 태그 추가</button><input id="bulkFile" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden></div></div>
       <div class="result-row"><p id="resultCount" aria-live="polite"></p></div>
@@ -139,9 +145,9 @@ footer { padding: 16px 0 24px; }
   </main>
   <footer><div><strong>작태 노트</strong><span>취향을 모으는 작은 공간.</span></div><div class="footer-actions"><button id="helpBtn">사용 안내</button><button id="exportBtn">백업 내보내기 ↓</button><button id="importBtn">백업 가져오기 ↑</button><input type="file" id="importFile" accept="application/json,.json" hidden></div><p>저장하면 온라인에 바로 저장되고 공개 갤러리에도 곧바로 반영돼요. 어느 기기에서든 편집 비밀번호만 넣으면 편집할 수 있어요.</p></footer>
 </div>
-<dialog id="editor"><form id="editForm"><div class="dialog-heading"><div><p class="eyebrow">YOUR COLLECTION</p><h2 id="editorTitle">새로운 태그 추가</h2></div><button type="button" class="icon-btn" data-close="editor" aria-label="닫기">×</button></div><label class="field">작가 태그 <span class="required">*</span><input id="tagInput" required maxlength="150" placeholder="예: anmi"><small>복사할 태그를 그대로 입력해 주세요.</small></label><label class="field">분류 태그<input id="labelsInput" maxlength="200" placeholder="예: 부드러운 색감, 선화, 테스트 중"><small>쉼표로 구분해 자유롭게 정리할 수 있어요.</small></label><label class="field">메모<textarea id="noteInput" maxlength="1500" rows="3" placeholder="모델 버전, 프롬프트, 마음에 든 특징 등을 기록해 보세요."></textarea></label><div class="field">비교 이미지<div class="upload"><img id="uploadPreview" alt="업로드할 비교 이미지" hidden><label for="imageInput" class="upload-label"><b>＋ 이미지 선택</b><span>JPG · PNG · WebP · 최대 10MB</span></label><input id="imageInput" type="file" accept="image/jpeg,image/png,image/webp" hidden></div><button type="button" class="text-btn remove-image" id="removeImage" hidden>이미지 제거</button></div><p id="formError" class="error" role="alert"></p><div class="dialog-actions"><button type="button" class="danger text-btn" id="deleteBtn" hidden>태그 삭제</button><span></span><button type="button" class="secondary" data-close="editor">취소</button><button type="submit" class="primary" id="saveBtn">저장하기</button></div></form></dialog>
+<dialog id="editor"><form id="editForm"><div class="dialog-heading"><div><p class="eyebrow">YOUR COLLECTION</p><h2 id="editorTitle">새로운 태그 추가</h2></div><button type="button" class="icon-btn" data-close="editor" aria-label="닫기">×</button></div><label class="field">작가 태그 <span class="required">*</span><input id="tagInput" required maxlength="150" placeholder="예: anmi"><small>복사할 태그를 그대로 입력해 주세요.</small></label><label class="field">캐릭터 분류<select id="categoryInput"><option value="female">여캐</option><option value="male">남캐</option></select></label><label class="field">분류 태그<input id="labelsInput" maxlength="200" placeholder="예: 부드러운 색감, 선화, 테스트 중"><small>쉼표로 구분해 자유롭게 정리할 수 있어요.</small></label><label class="field">메모<textarea id="noteInput" maxlength="1500" rows="3" placeholder="모델 버전, 프롬프트, 마음에 든 특징 등을 기록해 보세요."></textarea></label><div class="field">비교 이미지<div class="upload"><img id="uploadPreview" alt="업로드할 비교 이미지" hidden><label for="imageInput" class="upload-label"><b>＋ 이미지 선택</b><span>JPG · PNG · WebP · 최대 10MB</span></label><input id="imageInput" type="file" accept="image/jpeg,image/png,image/webp" hidden></div><button type="button" class="text-btn remove-image" id="removeImage" hidden>이미지 제거</button></div><p id="formError" class="error" role="alert"></p><div class="dialog-actions"><button type="button" class="danger text-btn" id="deleteBtn" hidden>태그 삭제</button><span></span><button type="button" class="secondary" data-close="editor">취소</button><button type="submit" class="primary" id="saveBtn">저장하기</button></div></form></dialog>
 <dialog id="viewer"><div class="dialog-heading"><div><p class="eyebrow">ARTIST PREVIEW</p><h2 id="viewTitle"></h2></div><button class="icon-btn" data-close="viewer" aria-label="닫기">×</button></div><div id="viewImage"></div><p id="viewNote"></p><div class="dialog-actions"><button class="secondary" id="viewEdit">편집하기</button><button class="primary" id="viewCopy">태그 복사</button></div></dialog>
-<dialog id="help"><div class="dialog-heading"><h2>작태 노트 사용 안내</h2><button class="icon-btn" data-close="help" aria-label="닫기">×</button></div><div class="help-body"><p><b>01 · 처음 한 번</b><br>기기마다 처음 한 번 ‘편집 비밀번호’를 넣어 주세요. 그 기기가 기억해요.</p><p><b>02 · 모으고 저장하기</b><br>‘태그 추가’로 작가 태그, 비교 이미지, 분류와 메모를 저장하면 온라인에 바로 저장되고 공개 갤러리에도 곧바로 보여요.</p><p><b>02-1 · 한꺼번에 추가하기</b><br>‘이미지로 한꺼번에 추가’를 누르거나 이미지 파일들을 화면에 끌어다 놓으면, 파일 이름의 artist_이름 부분을 작가 태그로 써서 카드를 만들어요. 이미 있는 태그는 건너뛰고, 이미지가 없던 카드에는 이미지만 넣어요.</p><p><b>03 · 여러 기기에서 쓰기</b><br>어느 기기에서 열어도 같은 목록이 보여요. 다른 기기에서 저장한 뒤라면 새로고침하고 편집해 주세요.</p><p><b>04 · 백업</b><br>‘백업 내보내기’는 이미지까지 담은 파일 하나로 받아요. ‘백업 가져오기’는 기존 항목에 없는 태그만 추가해요.</p><p>하트(즐겨찾기)는 이 브라우저에만 저장돼요. 이미지는 업로드할 때 최대 1200px로 줄여 저장해요.</p></div></dialog>
+<dialog id="help"><div class="dialog-heading"><h2>작태 노트 사용 안내</h2><button class="icon-btn" data-close="help" aria-label="닫기">×</button></div><div class="help-body"><p><b>01 · 처음 한 번</b><br>기기마다 처음 한 번 ‘편집 비밀번호’를 넣어 주세요. 그 기기가 기억해요.</p><p><b>02 · 모으고 저장하기</b><br>‘태그 추가’로 작가 태그, 비교 이미지, 분류와 메모를 저장하면 온라인에 바로 저장되고 공개 갤러리에도 곧바로 보여요.</p><p><b>02-1 · 한꺼번에 추가하기</b><br>‘이미지로 한꺼번에 추가’를 누르거나 이미지 파일들을 화면에 끌어다 놓으면, 파일 이름의 artist_이름 부분을 작가 태그로 써서 카드를 만들어요. 이미 있는 태그는 건너뛰고, 이미지가 없던 카드에는 이미지만 넣어요.</p><p><b>02-2 · 여캐 / 남캐</b><br>위쪽 ‘여캐 · 남캐’ 버튼으로 모음을 바꿔요. 지금 보고 있는 쪽에 추가되고, 편집 창의 ‘캐릭터 분류’로 옮길 수도 있어요. 같은 작가를 양쪽에 따로 둘 수 있어요.</p><p><b>03 · 여러 기기에서 쓰기</b><br>어느 기기에서 열어도 같은 목록이 보여요. 다른 기기에서 저장한 뒤라면 새로고침하고 편집해 주세요.</p><p><b>04 · 백업</b><br>‘백업 내보내기’는 이미지까지 담은 파일 하나로 받아요. ‘백업 가져오기’는 기존 항목에 없는 태그만 추가해요.</p><p>하트(즐겨찾기)는 이 브라우저에만 저장돼요. 이미지는 업로드할 때 최대 1200px로 줄여 저장해요.</p></div></dialog>
 <dialog id="settings"><form id="settingsForm"><div class="dialog-heading"><h2>편집 비밀번호</h2><button type="button" class="icon-btn" data-close="settings" aria-label="닫기">×</button></div><div class="help-body"><p id="settingsMsg"></p></div><label class="field">비밀번호<input id="passwordInput" type="password" autocomplete="current-password"></label><p id="settingsError" class="error" role="alert"></p><div class="dialog-actions"><button type="button" class="danger text-btn" id="disconnectBtn">이 기기에서 지우기</button><span></span><button type="button" class="secondary" data-close="settings">취소</button><button type="submit" class="primary" id="settingsSave">확인</button></div></form></dialog>
 <dialog id="copyDialog"><div class="dialog-heading"><h2>태그 복사</h2><button class="icon-btn" data-close="copyDialog" aria-label="닫기">×</button></div><p>아래 태그를 선택해 복사해 주세요.</p><textarea id="copyText" readonly rows="3" aria-label="복사할 태그"></textarea></dialog>
 <div class="toast" id="toast" role="status"></div><div class="drop-hint" id="dropHint" hidden>여기에 놓으면 파일 이름의 작가 태그로 한꺼번에 추가돼요</div>
@@ -162,7 +168,12 @@ try { const f = JSON.parse(localStorage.getItem(FAV_KEY) || '[]'); if (Array.isA
 let password = '';
 try { password = localStorage.getItem(PW_KEY) || ''; } catch {}
 
-const keyOf = x => x.tag.toLocaleLowerCase();
+const catOf = x => x.category === 'male' ? 'male' : 'female';
+const CAT_NAME = { female: '여캐', male: '남캐' };
+// 즐겨찾기 키: 여캐는 예전처럼 태그만, 남캐는 앞에 male: 을 붙여 같은 작가라도 따로 기억한다.
+const keyOf = x => (catOf(x) === 'male' ? 'male:' : '') + x.tag.toLocaleLowerCase();
+let category = 'female';
+try { if (localStorage.getItem('artist-notes-category') === 'male') category = 'male'; } catch {}
 const newId = () => crypto.randomUUID().replace(/-/g, '').slice(0, 16);
 /* 파일 이름에서 작가 태그를 찾는다. 예: "artist_kaninn_, _masterpiece, ….png" → "kaninn"
    (프롬프트의 artist:이름 이 파일 이름에서는 artist_이름_ 으로 바뀌어 저장된다) */
@@ -193,9 +204,10 @@ function validate(data) {
       else throw Error('이미지 형식을 확인해 주세요.');
     }
     const tag = x.tag.trim();
-    if (x.favorite === true) { favorites.add(tag.toLocaleLowerCase()); saveFavorites(); }
+    const cat = x.category === 'male' ? 'male' : 'female';
+    if (x.favorite === true) { favorites.add((cat === 'male' ? 'male:' : '') + tag.toLocaleLowerCase()); saveFavorites(); }
     return {
-      id, tag,
+      id, tag, category: cat,
       labels: Array.isArray(x.labels) ? x.labels.filter(v => typeof v === 'string').slice(0, 20).map(v => v.slice(0, 50)) : [],
       note: typeof x.note === 'string' ? x.note.slice(0, 1500) : '',
       image, sample: x.sample === true,
@@ -265,7 +277,7 @@ async function commit(next) {
       out.push({ ...x, image });
     }
     setSync('저장 중…');
-    const res = await api('save', { etag, entries: out.map(({ id, tag, labels, note, image, created }) => ({ id, tag, labels, note, image, created })) });
+    const res = await api('save', { etag, entries: out.map(({ id, tag, category, labels, note, image, created }) => ({ id, tag, category, labels, note, image, created })) });
     etag = res.etag;
     entries = out;
     render();
@@ -362,10 +374,12 @@ function imageContent(entry, index) {
 function render() {
   const q = $('search').value.trim().toLocaleLowerCase();
   const isFav = x => favorites.has(keyOf(x));
-  let list = entries.filter(x => (!onlyFavorites || isFav(x)) && [x.tag, ...x.labels, x.note].join(' ').toLocaleLowerCase().includes(q));
+  const inCat = entries.filter(x => catOf(x) === category);
+  let list = inCat.filter(x => (!onlyFavorites || isFav(x)) && [x.tag, ...x.labels, x.note].join(' ').toLocaleLowerCase().includes(q));
   const sort = $('sort').value;
   list.sort(sort === 'name' ? (a, b) => a.tag.localeCompare(b.tag) : sort === 'old' ? (a, b) => a.created - b.created : (a, b) => b.created - a.created);
-  $('allCount').textContent = entries.length; $('favCount').textContent = entries.filter(isFav).length;
+  $('allCount').textContent = inCat.length; $('favCount').textContent = inCat.filter(isFav).length;
+  for (const b of document.querySelectorAll('.cat')) { const on = b.dataset.cat === category; b.classList.toggle('active', on); b.setAttribute('aria-pressed', String(on)); b.querySelector('span').textContent = entries.filter(x => catOf(x) === b.dataset.cat).length; }
   $('resultCount').replaceChildren(document.createTextNode(q ? '검색 결과 ' : onlyFavorites ? '즐겨찾기 ' : '총 '), el('strong', '', String(list.length)), document.createTextNode(' 개'));
   $('grid').replaceChildren();
   for (const x of list) {
@@ -395,7 +409,7 @@ function openEditor(id = null) {
   if (!password) { openSettings('태그를 추가하거나 고치려면 편집 비밀번호를 넣어 주세요.'); return; }
   editing = id; const x = entries.find(e => e.id === id);
   $('editorTitle').textContent = x ? '태그 편집' : '새로운 태그 추가';
-  $('tagInput').value = x?.tag || ''; $('labelsInput').value = x?.labels.join(', ') || ''; $('noteInput').value = x?.note || '';
+  $('tagInput').value = x?.tag || ''; $('categoryInput').value = x ? catOf(x) : category; $('labelsInput').value = x?.labels.join(', ') || ''; $('noteInput').value = x?.note || '';
   draftImage = x?.image || ''; $('imageInput').value = ''; $('formError').textContent = ''; $('deleteBtn').hidden = !x;
   updatePreview(); $('editor').showModal();
 }
@@ -416,13 +430,14 @@ $('removeImage').onclick = () => { draftImage = ''; $('imageInput').value = ''; 
 $('editForm').onsubmit = async e => {
   e.preventDefault(); if (imagePending || busy) return;
   const tag = $('tagInput').value.trim();
+  const cat = $('categoryInput').value === 'male' ? 'male' : 'female';
   if (!tag) { $('formError').textContent = '작가 태그를 입력해 주세요.'; return; }
-  if (entries.some(x => x.id !== editing && x.tag.toLocaleLowerCase() === tag.toLocaleLowerCase())) { $('formError').textContent = '같은 태그가 이미 있어요. 기존 카드를 편집해 주세요.'; return; }
+  if (entries.some(x => x.id !== editing && catOf(x) === cat && x.tag.toLocaleLowerCase() === tag.toLocaleLowerCase())) { $('formError').textContent = CAT_NAME[cat] + '에 같은 태그가 이미 있어요. 기존 카드를 편집해 주세요.'; return; }
   const old = entries.find(x => x.id === editing);
-  const x = { id: editing || newId(), tag, labels: [...new Set($('labelsInput').value.split(',').map(v => v.trim()).filter(Boolean))].slice(0, 20), note: $('noteInput').value.trim(), image: draftImage, sample: false, created: old?.created || Date.now() };
+  const x = { id: editing || newId(), tag, category: cat, labels: [...new Set($('labelsInput').value.split(',').map(v => v.trim()).filter(Boolean))].slice(0, 20), note: $('noteInput').value.trim(), image: draftImage, sample: false, created: old?.created || Date.now() };
   if (old && favorites.has(keyOf(old)) && keyOf(old) !== keyOf(x)) { favorites.delete(keyOf(old)); favorites.add(keyOf(x)); saveFavorites(); }
   const next = old ? entries.map(v => v.id === editing ? x : v) : [x, ...entries];
-  if (await commit(next, (old ? '태그 편집: ' : '태그 추가: ') + tag)) { $('editor').close(); toast(old ? '변경 내용을 저장했어요.' : '새로운 태그를 추가했어요.'); }
+  if (await commit(next, (old ? '태그 편집: ' : '태그 추가: ') + tag)) { $('editor').close(); if (cat !== category) setCategory(cat); toast(old ? '변경 내용을 저장했어요.' : CAT_NAME[cat] + '에 새로운 태그를 추가했어요.'); }
 };
 $('deleteBtn').onclick = async () => {
   const old = entries.find(e => e.id === editing);
@@ -446,14 +461,14 @@ async function bulkAdd(files) {
   for (const [i, file] of files.entries()) {
     const tag = artistFromFilename(file.name);
     if (!tag) { noName.push(file.name); continue; }
-    const key = tag.toLocaleLowerCase();
+    const key = (category === 'male' ? 'male:' : '') + tag.toLocaleLowerCase();
     const existing = byKey.get(key);
     if (existing && (existing.image || filled.has(existing.id))) { skipped.push(tag); continue; }
     toast('이미지 읽는 중… ' + (i + 1) + '/' + files.length);
     let image;
     try { image = await readImage(file); } catch { skipped.push(tag); continue; }
     if (existing) filled.set(existing.id, image);
-    else { const x = { id: newId(), tag, labels: [], note: '', image, sample: false, created: Date.now() + i }; added.push(x); byKey.set(key, x); }
+    else { const x = { id: newId(), tag, category, labels: [], note: '', image, sample: false, created: Date.now() + i }; added.push(x); byKey.set(key, x); }
   }
   if (!added.length && !filled.size) {
     toast(noName.length ? '파일 이름에서 작가 태그(artist_이름)를 찾지 못했어요.' : '모두 이미 있는 태그예요.');
@@ -461,7 +476,7 @@ async function bulkAdd(files) {
   }
   const next = [...added.reverse(), ...entries.map(x => filled.has(x.id) ? { ...x, image: filled.get(x.id) } : x)];
   if (await commit(next)) {
-    const parts = [added.length + '개 추가'];
+    const parts = [CAT_NAME[category] + ' ' + added.length + '개 추가'];
     if (filled.size) parts.push(filled.size + '개는 기존 카드에 이미지 넣음');
     if (skipped.length) parts.push(skipped.length + '개는 이미 있어서 건너뜀');
     if (noName.length) parts.push(noName.length + '개는 작가 태그를 못 찾음');
@@ -476,6 +491,12 @@ document.addEventListener('dragenter', e => { if (!hasFiles(e) || document.query
 document.addEventListener('dragleave', e => { if (!hasFiles(e)) return; if (--dragDepth <= 0) { dragDepth = 0; $('dropHint').hidden = true; } });
 document.addEventListener('dragover', e => { if (hasFiles(e)) e.preventDefault(); });
 document.addEventListener('drop', e => { if (!hasFiles(e)) return; e.preventDefault(); dragDepth = 0; $('dropHint').hidden = true; if (!document.querySelector('dialog[open]')) bulkAdd(e.dataTransfer.files); });
+function setCategory(cat) {
+  category = cat === 'male' ? 'male' : 'female';
+  try { localStorage.setItem('artist-notes-category', category); } catch {}
+  render(); checkLegacy();
+}
+document.querySelectorAll('.cat').forEach(b => b.onclick = () => setCategory(b.dataset.cat));
 $('allTab').onclick = () => setTab(false); $('favTab').onclick = () => setTab(true); $('search').oninput = render; $('sort').onchange = render; $('addBtn').onclick = () => openEditor(); $('helpBtn').onclick = () => $('help').showModal();
 $('emptyAction').onclick = () => { if ($('search').value) { $('search').value = ''; render(); } else if (onlyFavorites) setTab(false); else openEditor(); };
 document.addEventListener('keydown', e => { if (e.key === '/' && !document.querySelector('dialog[open]') && !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) { e.preventDefault(); $('search').focus(); } });
